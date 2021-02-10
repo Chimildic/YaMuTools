@@ -1,0 +1,234 @@
+<html>
+    <head>
+        <title>Настройки YaMuTools</title>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <link rel="shortcut icon" type="image/png" href="/icon/icon16.png" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="stylesheet" href="/style/options.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+            rel="stylesheet"
+        />
+        <script src="/script/lib/localization.js"></script>
+        <script src="/script/lib/sweetalert2.min.js"></script>
+        <script src="/script/lib/alert.js"></script>
+        <script src="/script/domain/options.js"></script>
+    </head>
+
+    <body class="wrapper">
+        <header>
+            <img class="header-logo" src="/icon/icon32.png" alt="YaMuTools" />
+            <h2>Настройки YaMuTools</h2>
+        </header>
+        <footer class="top-footer">
+            <p id="version">Версия 0.4.0</p>
+            <a class="button" target="_blank" href="/page/changelog.html">Список изменений</a>
+            <a class="button" target="_blank" href="/page/feedback.html">Обратная связь</a>
+            <p id="author">Chimildic, 2021</p>
+        </footer>
+        <section class="bubble">
+            <h3>Моя музыка</h3>
+            <hr />
+            <label class="item">
+                <input type="checkbox" id="onCollectorTool" />
+                <div class="item-text">
+                    <p class="item__title">Инструмент "Коллекционер"</p>
+                    <p class="item__desc">
+                        Создает различные плейлисты. Описание
+                        <a class="button button-link" target="_blank" href="/page/playlists.html">здесь</a>.
+                    </p>
+                </div>
+            </label>
+            <label class="item item-col">
+                <div class="item-text none-checkbox">
+                    <p class="item__title">Способ создания плейлиста</p>
+                    <p class="item__desc">Запоминается последний созданный плейлист по каждому типу.</p>
+                </div>
+                <select id="actionWithPlaylist" class="none-checkbox">
+                    <option value="newEveryTime">Каждый раз новый плейлист</option>
+                    <option value="updateIfExists">Обновить если существует</option>
+                    <option value="appendToExists">Добавить к существующему</option>
+                    <option value="askEveryTime">Каждый раз спрашивать</option>
+                </select>
+            </label>
+            <label class="item">
+                <input type="checkbox" id="onRandomCover" />
+                <div class="item-text">
+                    <p class="item__title">Случайная обложка</p>
+                    <p class="item__desc">
+                        Добавляет картинку к плейлистам Коллекционера. <br />
+                        Можно запросить новую в меню загрузки обложки.
+                    </p>
+                </div>
+            </label>
+            <label class="item">
+                <input type="checkbox" id="onMixHater" />
+                <div class="item-text">
+                    <p class="item__title">Игнорировать миксы в новых релизах</p>
+                    <p class="item__desc">
+                        Пытаться избегать треков, версия которых содержит слова: <i>mix, live, demo, club, version</i>.
+                    </p>
+                </div>
+            </label>
+            <label class="item">
+                <input type="checkbox" id="onLastfmCollector" />
+                <div class="item-text">
+                    <p class="item__title">Подборки на основе Last.fm</p>
+                    <p class="item__desc">Включить в состав Коллекционера модуль Last.fm.</p>
+                </div>
+            </label>
+            <label class="item item-col">
+                <div class="item-text none-checkbox">
+                    <p class="item__title">Переназначить аккаунт Last.fm</p>
+                    <p class="item__desc">По умолчанию берется из привязки к Яндекс.Музыки. Можно переназначить на другой.</p>
+                </div>
+                <input class="none-checkbox" id="reassignLoginLastfm" type="text" placeholder="Логин Last.fm" maxlength="40" />
+            </label>
+            <label class="item item-col">
+                <div class="item-text none-checkbox">
+                    <p class="item__title">Количество запросов к Last.fm</p>
+                    <p class="item__desc">Влияет на число треков в плейлистах: Рекомендовано, Микс, Скробблинг, Соседи.</p>
+                </div>
+                <table class="item__desc table-similar-playlist">
+                    <tr>
+                        <td><input id="requestLastfmRange" type="range" min="1" max="10" step="1" value="1" /></td>
+                        <td id="idLastfmRangeCurrent">1</td>
+                    </tr>
+                </table>
+            </label>
+        </section>
+        <footer id="donateSection" class="item-col" style="display: none">
+            <iframe
+                src="https://yoomoney.ru/quickpay/shop-widget?writer=seller&targets=%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%B0%D1%82%D1%8C%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%20YaMuTools&targets-hint=&default-sum=300&button-text=11&payment-type-choice=on&mobile-payment-type-choice=on&comment=on&hint=&successURL=&quickpay=shop&account=410014208620686"
+                width="100%"
+                height="301"
+                frameborder="0"
+                allowtransparency="true"
+                scrolling="no"
+            ></iframe>
+        </footer>
+        <section class="bubble">
+            <h3>Плейлист</h3>
+            <hr />
+
+            <label class="item item-col">
+                <div class="item-text none-checkbox">
+                    <p class="item__title">Создание похожего плейлиста</p>
+                    <p class="item__desc">Случайная подборка музыки, похожая на треки плейлиста-источника по оценке Last.fm.</p>
+                </div>
+                <table class="item__desc table-similar-playlist">
+                    <tr>
+                        <td>Лимит треков</td>
+                        <td><input id="similarPlaylistCountTracks" type="range" min="20" max="200" step="10" value="" /></td>
+                        <td id="similarPlaylistCountTracksCurrent"></td>
+                    </tr>
+                    <tr>
+                        <td>Минимальный порог</td>
+                        <td><input id="similarThreshold" type="range" min="0.1" max="0.8" step="0.05" value="" /></td>
+                        <td id="similarThresholdCurrent"></td>
+                    </tr>
+                </table>
+            </label>
+
+            <label class="item">
+                <input type="checkbox" id="onToolNoDuplicate" />
+                <div class="item-text">
+                    <p class="item__title">Поиск дубликатов треков</p>
+                    <p class="item__desc">
+                        Удаляет явные дубликаты, перемещает неявные наверх плейлиста. Предварительно создает копию плейлиста. Недоступно в
+                        плейлисте "Мне нравится".
+                    </p>
+                </div>
+            </label>
+            <label class="item">
+                <input type="checkbox" id="onLikerTool" />
+                <div class="item-text">
+                    <p class="item__title">Инструмент "Лайкер"</p>
+                    <p class="item__desc">Позволяет ставить лайки или дизлайки сразу всем трекам плейлиста.</p>
+                </div>
+            </label>
+            <label class="item">
+                <input type="checkbox" id="onExporterTool" />
+                <div class="item-text">
+                    <p class="item__title">Инструмент "Экспортер"</p>
+                    <p class="item__desc">Поможет перенести музыку на другую платформу. Например, Spotify.</p>
+                </div>
+            </label>
+        </section>
+        <section class="bubble">
+            <h3>Навигация</h3>
+            <hr />
+            <label class="item">
+                <input type="checkbox" id="onPodcastHater" />
+                <div class="item-text">
+                    <p class="item__title">Скрыть подкасты</p>
+                    <p class="item__desc">
+                        Убирает элементы подкастов с главной страницы и навигации. Не касается их наличия в плейлистах и воспроизведения.
+                    </p>
+                </div>
+            </label>
+            <div class="item-with-context">
+                <label class="item">
+                    <input type="checkbox" id="offTeaserPlaylist" data-context-id="teaserPlaylist" />
+                    <div class="item-text">
+                        <p class="item__title">Убрать тизер плейлиста</p>
+                        <p class="item__desc">Удаляет блок рекомендации плейлиста/подкаста с правой верхней части сайта.</p>
+                    </div>
+                </label>
+                <div class="item-context" id="teaserPlaylist">
+                    <p class="item__desc">
+                        <span style="color: burlywood">При отключении требуется перезагрузка сайта, чтобы тизер вернулся.</span>
+                    </p>
+                </div>
+            </div>
+            <div class="item-with-context">
+                <label class="item">
+                    <input type="checkbox" id="onUserTab" data-context-id="dataUserTab" />
+                    <div class="item-text">
+                        <p class="item__title">Добавить свою вкладку</p>
+                        <p class="item__desc">Пользовательская вкладка, ведущая по указанному адресу.</p>
+                    </div>
+                </label>
+                <div class="item-context" id="dataUserTab">
+                    <input id="titleUserTab" type="text" placeholder="Заголовок до 16 символов" maxlength="16" size="20" />
+                    <input
+                        id="urlUserTab"
+                        type="text"
+                        placeholder="Ссылка до 100 символов. Начинать с https://"
+                        maxlength="100"
+                        size="40"
+                    />
+                </div>
+            </div>
+        </section>
+        <footer>
+            <a id="btnResetOptions" class="button">Сбросить по умолчанию</a>
+            <a class="button" target="_blank" href="/page/conditions.html">Условия использования</a>
+        </footer>
+        <section class="bubble bottom-footer">
+            <h3>Другое</h3>
+            <hr />
+            <label class="item">
+                <input type="checkbox" id="showFeedbackAlert" />
+                <div class="item-text">
+                    <p class="item__title">Написать отзыв</p>
+                    <p class="item__desc">Периодическое напоминание с просьбой написать отзыв для расширения.</p>
+                </div>
+            </label>
+            <label class="item">
+                <input type="checkbox" id="openChangelogWithUpdate" />
+                <div class="item-text">
+                    <p class="item__title">Уведомление при обновлении</p>
+                    <p class="item__desc">После обновления расширения откроется вкладка со списком изменений.</p>
+                </div>
+            </label>
+            <label class="item" id="checkboxDonateSection" style="display: none">
+                <input type="checkbox" id="onDonateSection" />
+                <div class="item-text">
+                    <p class="item__title">Показать блок поддержки</p>
+                    <p class="item__desc">При отключении убирает форму ЮMoney с этой страницы.</p>
+                </div>
+            </label>
+        </section>
+    </body>
+</html>

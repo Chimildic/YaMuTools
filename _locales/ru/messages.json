@@ -1,0 +1,139 @@
+{
+    "ext_name": { "message": "YaMuTools - Новые функции для Яндекс.Музыки" },
+    "ext_short_name": { "message": "YaMuTools" },
+    "ext_description": { "message": "Добавляет новые возможности на сайт Яндекс.Музыки" },
+    "ext_ver": { "message": "Версия" },
+    "ext_current_ver": { "message": "Текущая версия" },
+    "info_reset_options": { "message": "Сбросить настройки?" },
+    "info_no_tracks": { "message": "Треков не найдено" },
+    "info_limit_tracks": {
+        "message": "Превышен лимит треков на плейлист. Ограничено до 10 тысяч. Всего было $length$.",
+        "placeholders": { "length": { "content": "$1" } }
+    },
+    "info_server_waiting": { "message": "Ожидание ответа от сервера. По окончанию страница обновится автоматически." },
+    "info_playlist_creating": {
+        "message": "Идет создание плейлиста $title$. По окончанию будет выполнен переход к нему. Если процесс занимает более 10 минут, откройте консоль Ctrl + Shift + J и сообщите по обратной связе о возникшей ошибке. Затем повторите попытку.",
+        "placeholders": { "title": { "content": "$1" } }
+    },
+    "error_storage_sync": { "message": "Ошибка синхронизации" },
+    "error_login_lastfm": {
+        "message": "Не удалось получить логин Last.fm. Проверьте наличие привязки к Last.fm в настройках Яндекс.Музыки."
+    },
+    "error_insert_element": { "message": "Не удалось внедрить элемент расширения." },
+    "error_insert_element_details": {
+        "message": "Сообщите об ошибке https://sites.google.com/view/yamutools/обратная-связь\r\nНе удалось внедрить элемент расширения. Превышено число попыток: $tryCount$. Время ожидания: $time$ секунд.\r\nKey = $key$, Callback = $callbackName$",
+        "placeholders": {
+            "tryCount": { "content": "$1" },
+            "time": { "content": "$2" },
+            "key": { "content": "$3" },
+            "callbackName": { "content": "$4" }
+        }
+    },
+    "button_yes": { "message": "Да" },
+    "button_no": { "message": "Нет" },
+    "button_close": { "message": "Закрыть" },
+    "button_details": { "message": "Подробнее" },
+    "nav_tab_podcast": { "message": "Подкасты" },
+    "nav_tab_feed": { "message": "Рекомендации" },
+    "exporter_title": { "message": "Экспортер" },
+    "statistic_title": { "message": "Статистика" },
+    "statistic_processing": { "message": "Идет подсчет" },
+    "statistic_type_artists": { "message": "Жанры по исполнителям" },
+    "statistic_type_tracks": { "message": "Жанры по трекам" },
+    "statistic_artists": { "message": "Исполнителей" },
+    "statistic_genre": { "message": "Жанров" },
+    "statistic_tracks": { "message": "Треков" },
+    "statistic_albums": { "message": "Альбомов" },
+    "statistic_chart": { "message": "Чарт" },
+    "statistic_no_tag": {
+        "message": "Тег жанра отсутсвует у $count$ ($procent$%) треков",
+        "placeholders": { "count": { "content": "$1" }, "procent": { "content": "$2" } }
+    },
+    "liker_title": { "message": "Лайкер" },
+    "liker_like_add": { "message": "Поставить лайк всем трекам" },
+    "liker_like_remove": { "message": "Снять лайк со всех треков" },
+    "liker_dislike_add": { "message": "Поставить дизлайк всем трекам" },
+    "liker_dislike_remove": { "message": "Снять дизлайк со всех треков" },
+    "pls_title_copy": { "message": "Копия" },
+    "pls_new_all_title": { "message": "Новые релизы" },
+    "pls_new_all_desc": { "message": "Подборка рекомендованных релизов с главной страницы." },
+    "pls_new_single_title": { "message": "Новые синглы" },
+    "pls_new_single_desc": {
+        "message": "Подборка рекомендованных релизов с главной страницы. Включает только альбомы, помечанные как сингл."
+    },
+    "pls_new_best_title": { "message": "Популярные новинки" },
+    "pls_new_best_desc": {
+        "message": "Подборка рекомендованных релизов с главной страницы. Включает только треки, помечанные молнией (популярны среди слушателей)."
+    },
+    "pls_desc_mix_removed": { "message": "Удалены миксы" },
+    "pls_dislikes_title": { "message": "Мои дизлайки" },
+    "pls_dislikes_desc": {
+        "message": "Список заблокированных треков на момент создания плейлиста. Сортировка не связана с порядком блокироки."
+    },
+    "pls_discography_title": { "message": "Дискография" },
+    "pls_discography_desc": { "message": "Все треки исполнителя на момент создания плейлиста." },
+    "pls_rare_artist_title": { "message": "Редкие исполнители" },
+    "pls_rare_artist_desc": { "message": "Подборка блока \"Похоже, вам может понравиться\" с ленты рекомендаций." },
+    "pls_feed_week_title": { "message": "Недельный чарт" },
+    "pls_feed_week_desc": {
+        "message": "Подборка блока \"Личный чарт\" с ленты рекомендаций. Малое число треков говорит о том, что подобных блок в ленте тоже было мало."
+    },
+    "pls_fan_artist_title": { "message": "У поклонников" },
+    "pls_fan_artist_desc": { "message": "Подборка блока \"Что в плейлистах у поклонников\" с ленты рекомендаций." },
+    "pls_fan_artist_inner_desc": { "message": "Эту музыку слушают поклонники" },
+    "pls_missed_title": { "message": "Пропущено" },
+    "pls_missed_desc": { "message": "Подборка блока \"Вы еще не слушали эти треки\" с ленты рекомендаций." },
+    "pls_lastfm_top_title": { "message": "Топ прослушиваний" },
+    "pls_lastfm_top_desc": { "message": "Чарт по числу прослушиваний" },
+    "pls_lastfm_top_inner_desc": {
+        "message": "$period$. Выборка ограничена до $limit$ треков. Если меньше, импорт не смог их найти.",
+        "placeholders": { "period": { "content": "$1" }, "limit": { "content": "$2" } }
+    },
+    "pls_lastfm_loved_title": { "message": "Любимые треки" },
+    "pls_lastfm_loved_desc": { "message": "Подборка всех треков, отмеченных лайком на Last.fm." },
+    "pls_lastfm_recom_title": { "message": "Рекомендовано" },
+    "pls_lastfm_recom_desc": { "message": "Набор рекомендованных треков от Last.fm. Большинство треков с новым запросом поменяется." },
+    "pls_lastfm_mix_title": { "message": "Микс" },
+    "pls_lastfm_mix_desc": { "message": "Музыка, которую скробблил ранее, и рекомендации от Last.fm." },
+    "pls_lastfm_library_title": { "message": "Скробблинг" },
+    "pls_lastfm_library_desc": { "message": "Только музыка, которую скробблил ранее." },
+    "period_saw": { "message": "Просмотрен период" },
+    "period_4days": { "message": "За 4 дня" },
+    "period_7days": { "message": "За 7 дней" },
+    "period_10days": { "message": "За 10 дней" },
+    "period_1month": { "message": "За месяц" },
+    "period_3month": { "message": "За 3 месяца" },
+    "period_6month": { "message": "За 6 месяцев" },
+    "period_12month": { "message": "За 12 месяцев" },
+    "period_1year": { "message": "За год" },
+    "period_2years": { "message": "За 2 года" },
+    "period_5years": { "message": "За 5 лет" },
+    "period_default": { "message": "Все треки" },
+    "period_random": { "message": "Случайная подборка" },
+    "period_all_time": { "message": "За все время" },
+    "period_all_available": { "message": "Все доступные" },
+    "collector_title": { "message": "Коллекционер" },
+    "collector_menu_recom": { "message": "Рекомендации" },
+    "collector_menu_new": { "message": "Новинки" },
+    "noduplicate_title": { "message": "Поиск дубликатов" },
+    "noduplicate_processing": { "message": "Чем больше треков, тем дольше процесс." },
+    "noduplicate_nofound": { "message": "Дубликатов не найдено" },
+    "noduplicate_error": { "message": "Ошибка при создании резервной копии плейлиста. Операция прервана." },
+    "noduplicate_result": {
+        "message": "В плейлисте найдено дубликатов $totalDuplicate$, из которых удалено $removedCount$ по признаку одинакового id-номера. Остальные похожие треки ($similarCount$) перемещены в начало списка для пользовательской модерации. Порядок уникальных треков ($uniqueCount$) не изменен.\n\nНажмите ОК, чтобы увидеть изменения.",
+        "placeholders": {
+            "totalDuplicate": { "content": "$1" },
+            "removedCount": { "content": "$2" },
+            "similarCount": { "content": "$3" },
+            "uniqueCount": { "content": "$4" }
+        }
+    },
+    "random_cover_title": { "message": "Случайная обложка" },
+    "noduplicates_case_choose": { "message": "Выберите действие" },
+    "noduplicates_case_desc": {
+        "message": "Создана копия плейлиста\n\n1. Изменить содержимое оригинального плейлиста\n2. Изменить копию, оригинал не трогать"
+    },
+    "noduplicates_case_original": { "message": "1. Изменить оригинал" },
+    "noduplicates_case_copy": { "message": "2. Не трогать оригинал" },
+    "noduplicates_toast_info": { "message": "Операция отменена. Оригинал и копия плейлиста не изменились." }
+}
