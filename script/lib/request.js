@@ -20,6 +20,12 @@ function backgroundGET(url, callback) {
     backgroundRequest('requestGET', url, (response) => callback(response));
 }
 
+function backgroundFileGET(url, callback) {
+    backgroundRequest('requestFileGET', url, (backgroungdUrl) => {
+        requestFileGET(backgroungdUrl, (file) => callback(file));
+    });
+}
+
 function backgroundRequest(action, url, callback) {
     chrome.runtime.sendMessage({ action: action, url: url }, (response) => callback(response));
 }

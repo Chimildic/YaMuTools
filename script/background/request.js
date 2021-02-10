@@ -1,3 +1,16 @@
+function requestFileGET(url, callback) {
+    let request = new XMLHttpRequest();
+    request.responseType = 'blob';
+    request.onreadystatechange = function () {
+        if (request.readyState == 4) {
+            let url = URL.createObjectURL(request.response);
+            callback(url);
+        }
+    };
+    request.open('GET', url);
+    request.send();
+}
+
 function requestGET(url, callback) {
     requestOfType({
         type: 'GET',
@@ -8,7 +21,7 @@ function requestGET(url, callback) {
 }
 
 let countRequest = 0;
-async function requestOfType(data) {
+function requestOfType(data) {
     if (countRequest > 100) {
         let timerId = setTimeout(() => {
             clearTimeout(timerId);
@@ -17,15 +30,19 @@ async function requestOfType(data) {
         return;
     }
 
+    let request = new XMLHttpRequest();
     countRequest++;
-    try {
-        const response = await fetch(data.url, {
-            method: data.type,
-            body: data.formData,
-        });
-        data.callback(await response.json());
-    } catch (error) {
-        console.error(error);
-        data.callback('error');
-    }
+    request.onreadystatechange = function () {
+        if (request.readyState == 4) {
+            countRequest--;
+            if (request.status >= 400) {
+                data.callback('error');
+            } else {
+                let responseJSON = JSON.parse(request.responseText);
+                data.callback(responseJSON);
+            }
+        }
+    };
+    request.open(data.type, data.url);
+    request.send(data.formData);
 }

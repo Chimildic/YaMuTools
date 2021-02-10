@@ -1,7 +1,7 @@
 chrome.runtime.onInstalled.addListener(onInstalled);
 chrome.runtime.onMessage.addListener(onContentMessage);
 chrome.tabs.onUpdated.addListener(onTabsUpdated);
-chrome.action.onClicked.addListener(openOptionsPage);
+chrome.browserAction.onClicked.addListener(openOptionsPage);
 
 function onInstalled(details) {
     if (details.reason == 'install') {
@@ -18,6 +18,8 @@ function onContentMessage(message, sender, sendResponse) {
         setDefaultOptions(() => sendResponse({ success: true }));
     } else if (message.action == 'requestGET') {
         requestGET(message.url, (response) => sendResponse(response));
+    } else if (message.action == 'requestFileGET') {
+        requestFileGET(message.url, (url) => sendResponse(url));
     }
     return true;
 }

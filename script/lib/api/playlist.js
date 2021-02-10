@@ -105,11 +105,9 @@ function createCopyOfPlaylist(playlist, callback) {
         trackIds: getTrackIds(playlist.tracks),
     };
 
-    // Не работает с переходом на манифест 3.
-    // Ошибка кросс-домена в контенте. Нельзя вернуть картинку с Service Worker.
-    // if (playlist.cover && playlist.cover.custom) {
-    //     data.urlCover = 'https://' + playlist.cover.uri.replace('%%', '1000x1000');
-    // }
+    if (playlist.cover && playlist.cover.custom) {
+        data.urlCover = 'https://' + playlist.cover.uri.replace('%%', '1000x1000');
+    }
 
     createPlaylist(data, (responseJSON) => callback(responseJSON));
 }
@@ -194,10 +192,11 @@ function setCover(kind, urlCover, callback) {
         setRandomCover(kind, callback);
         return;
     }
-    fetch(urlCover).then(r => r.blob()).then(blob => {
+
+    backgroundFileGET(urlCover, (cover) => {
         let url = `${HANDLER_UPLOADPIC}?kind=${kind}&sign=${sign}`;
         let formData = new FormData();
-        formData.append('file', blob);
+        formData.append('file', cover);
         requestFilePOST(url, formData, callback);
     });
 }
