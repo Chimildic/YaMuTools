@@ -8,12 +8,14 @@ function requestGET(url, callback) {
 }
 
 function requestPOST(url, formData, callback) {
-    requestOfType({
-        type: 'POST',
-        url: url,
-        formData: formData,
-        callback: callback,
-    });
+    refreshSign(() =>
+        requestOfType({
+            type: 'POST',
+            url: url,
+            formData: formData,
+            callback: callback,
+        })
+    );
 }
 
 function backgroundGET(url, callback) {

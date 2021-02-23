@@ -11,7 +11,7 @@ function onClickNoDuplicate() {
     receivePlaylistByLocation((playlist) => {
         let countLostTracks = removeLostTracks(playlist.tracks);
         playlist.trackCount = playlist.trackCount - countLostTracks;
-        if (countLostTracks > 0){
+        if (countLostTracks > 0) {
             console.log(`Обнаружено и проигноировано ${countLostTracks} треков из-за отсутвия данных.`);
         }
 
@@ -77,10 +77,10 @@ function showResultNoDuplicate(result) {
     });
 }
 
-function removeLostTracks(tracks){
+function removeLostTracks(tracks) {
     let count = 0;
-    for (let i = 0; i < tracks.length; i++){
-        if (tracks[i].hasOwnProperty('error')){
+    for (let i = 0; i < tracks.length; i++) {
+        if (tracks[i].hasOwnProperty('error')) {
             tracks.splice(i, 1);
             count++;
             i--;
@@ -182,14 +182,29 @@ function addIndex(tracks) {
     });
 }
 
-function sortByTitle(tracks) {
+function sortByTitle(tracks, direction = 'asc') {
     tracks.sort((x, y) => {
         if (x && x.title && y && y.title) {
-            return x.title.localeCompare(y.title);
-        } else {
-            console.error('Ошибка при сортировке треков по названию:', x, y);
-            return 1;
+            if (direction == 'asc') {
+                return x.title.localeCompare(y.title);
+            }
+            return y.title.localeCompare(x.title);
         }
+        console.error('Ошибка при сортировке треков по названию:', x, y);
+        return 1;
+    });
+}
+
+function sortByArtist(tracks, direction = 'asc') {
+    tracks.sort((x, y) => {
+        if (x && x.artists && x.artists.length > 0 && y && y.artists && y.artists.length > 0) {
+            if (direction == 'asc') {
+                return x.artists[0].name.localeCompare(y.artists[0].name);
+            }
+            return y.artists[0].name.localeCompare(x.artists[0].name);
+        }
+        console.error('Ошибка при сортировке треков по исполнителю:', x, y);
+        return 1;
     });
 }
 

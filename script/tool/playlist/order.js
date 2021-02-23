@@ -8,19 +8,36 @@ const ORDER_CONTEXT_MENU = {
     items: [
         { header: true, title: 'Сортировка', handler: switchMainAndOrderContext },
         {
-            title: 'По алфавиту (А-Я)',
-            handler: () => showSortAlert().then((result) => onClickOrderTool(result, 'asc')),
+            title: 'По треку (А-Я)',
+            handler: () => onClickOrderTool('track', 'asc'),
         },
         {
-            title: 'По алфавиту (Я-А)',
-            handler: () => showSortAlert().then((result) => onClickOrderTool(result, 'desc')),
+            title: 'По треку (Я-А)',
+            handler: () => onClickOrderTool('track', 'desc'),
+        },
+        {
+            title: 'По исполнителю (А-Я)',
+            handler: () => onClickOrderTool('artist', 'asc'),
+        },
+        {
+            title: 'По исполнителю (Я-А)',
+            handler: () => onClickOrderTool('artist', 'desc'),
         },
         {
             title: 'Случайно',
-            handler: () => showSortAlert().then((result) => onClickOrderTool(result, 'random')),
+            handler: () => onClickOrderTool('random'),
         },
     ],
 };
+
+function onClickOrderTool(type, direction) {
+    toggleDropdown('menuPlaylistMain');
+    showSortAlert().then((result) => {
+        if (result.isConfirmed) {
+            sortPlaylistTracks(type, direction);
+        }
+    });
+}
 
 function switchMainAndOrderContext() {
     toggleDropdown('orderMain');
@@ -40,22 +57,14 @@ function showSortAlert() {
     });
 }
 
-function onClickOrderTool(result, type) {
-    toggleDropdown('menuPlaylistMain');
-    if (result.isConfirmed) {
-        sortPlaylistTracks(type);
-    }
-}
-
-function sortPlaylistTracks(type) {
+function sortPlaylistTracks(type, direction) {
     receivePlaylistByLocation((playlist) => {
         if (type == 'random') {
             shuffle(playlist.tracks);
-        } else {
-            sortByTitle(playlist.tracks);
-            if (type == 'desc') {
-                playlist.tracks.reverse();
-            }
+        } else if (type == 'track') {
+            sortByTitle(playlist.tracks, direction);
+        } else if (type == 'artist') {
+            sortByArtist(playlist.tracks, direction);
         }
         replaceAllTracks(
             {
