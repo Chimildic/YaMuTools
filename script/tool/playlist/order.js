@@ -31,7 +31,7 @@ const ORDER_CONTEXT_MENU = {
 };
 
 function onClickOrderTool(type, direction) {
-    toggleDropdown('menuPlaylistMain');
+    toggleDropdown('orderMain');
     showSortAlert().then((result) => {
         if (result.isConfirmed) {
             sortPlaylistTracks(type, direction);

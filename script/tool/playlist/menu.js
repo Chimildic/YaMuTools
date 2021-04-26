@@ -35,9 +35,12 @@ function buildMenuPlaylist(args) {
         menus[0].items.push(NODUPLICATE_MENU_ITEM);
     }
 
-    if (canAddItem){
+    if (canAddItem) {
         menus[0].items.push(ORDER_MENU_ITEM);
         menus.push(ORDER_CONTEXT_MENU);
+
+        menus[0].items.push(FILTER_MENU_ITEM);
+        menus.push(FILTER_CONTEXT_MENU);
     }
 
     if (args.onLikerTool) {
