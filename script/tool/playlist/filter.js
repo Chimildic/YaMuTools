@@ -58,7 +58,7 @@ function onClickRemoveMixTracks(playlist) {
             '<p><input type="checkbox" id="choose-live" checked/> <label for="choose-live">live</label></p>' +
             '<p><input type="checkbox" id="choose-version" checked/> <label for="choose-version">version</label></p>' +
             '<p><input type="checkbox" id="choose-karaoke" checked/> <label for="choose-karaoke">karaoke</label></p>' +
-            '<p><input type="checkbox" id="choose-instrumental" checked/> <label for="choose-instrumental">karaoke</label></p>' +
+            '<p><input type="checkbox" id="choose-instrumental" /> <label for="choose-instrumental">instrumental</label></p>' +
             '<p><input type="checkbox" id="choose-cover"/> <label for="choose-cover">cover</label></p>' +
             '<p><input type="checkbox" id="choose-radio"/> <label for="choose-radio">radio</label></p>' +
             '<p><input type="checkbox" id="choose-piano"/> <label for="choose-piano">piano</label></p>' +
