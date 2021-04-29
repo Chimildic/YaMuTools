@@ -22,7 +22,7 @@ function addSliderButtonEventListener() {
 }
 
 function removePodcastMainLine() {
-    elelement = document.querySelector('.page-main__line_podcasts');
+    elelement = document.querySelector('.page-line_podcasts');
     if (elelement) {
         elelement.remove();
     }

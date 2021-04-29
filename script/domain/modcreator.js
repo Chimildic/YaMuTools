@@ -1,4 +1,4 @@
-const PAGE_MAIN = '.page-main__line_podcasts ';
+const PAGE_MAIN = '.page-line_podcasts';
 const PAGE_PLAYLIST = '.page-playlist';
 const PAGE_ARTIST = '.page-artist';
 const PAGE_USERMUSIC_PLAYLISTS = '.page-users__playlists';
