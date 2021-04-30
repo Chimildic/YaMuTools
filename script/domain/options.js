@@ -21,7 +21,7 @@ function addEventListener(type, action, callback) {
 function fillFooter() {
     manifestData = chrome.runtime.getManifest();
     version.innerText = `${getMessage('ext_ver')} ${manifestData.version}`;
-    author.innerText = manifestData.author + ', 2020';
+    author.innerText = `${manifestData.author}, ${new Date().getFullYear()}`;
     btnResetOptions.addEventListener('click', onClickResetOptions);
 }
 
