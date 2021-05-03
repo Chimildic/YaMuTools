@@ -143,6 +143,8 @@ function match(items, strRegex, invert = false) {
         let versionCheck = false;
         if (typeof item == 'undefined') {
             return false;
+        } else if (item.hasOwnProperty('error')) {
+            return true;
         }
         if (item.hasOwnProperty('albums')) {
             albumCheck = regex.test(item.albums[0].title.formatName());
