@@ -19,6 +19,6 @@ function receiveTracksByAlbumId(albumId, callback) {
     });
 }
 
-function receiveFavoriteTrackIds(callback) {
-    requestGET(API_FAV, (responseJSON) => callback(formatFavoriteListToTrackIds(responseJSON)));
+function receiveFavoriteTrackIds(type, callback) {
+    requestGET(API_FAV, (responseJSON) => callback(formatFavoriteListToTrackIds(responseJSON, type)));
 }

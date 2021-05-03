@@ -8,16 +8,16 @@ const FILTER_CONTEXT_MENU = {
     items: [
         { header: true, title: 'Фильтр треков', handler: switchMainAndFilterContext },
         {
+            title: 'Управление диз/лайками',
+            handler: () => onClickFilterTool(onClickControlDislikesTracks),
+        },
+        {
+            title: 'Управление ремиксами',
+            handler: () => onClickFilterTool(onClickControlMixTracks),
+        },
+        {
             title: 'Удалить с пометкой "Е"',
             handler: () => onClickFilterTool(onClickRemoveExplicitTracks),
-        },
-        {
-            title: 'Удалить дизлайки',
-            handler: () => onClickFilterTool(onClickRemoveDislikesTracks),
-        },
-        {
-            title: 'Удалить ремиксы',
-            handler: () => onClickFilterTool(onClickRemoveMixTracks),
         },
         {
             title: 'Удалить кириллицу',
@@ -33,6 +33,7 @@ function switchMainAndFilterContext() {
 
 function onClickFilterTool(callback) {
     toggleDropdown('filterMain');
+    fireLoadingSwal('Загрузка плейлиста..');
     receivePlaylistByLocation((playlist) => callback(playlist));
 }
 
@@ -41,15 +42,36 @@ function onClickRemoveExplicitTracks(playlist) {
     updateTracksWithFilter(playlist);
 }
 
-function onClickRemoveDislikesTracks(playlist) {
-    receiveFavoriteTrackIds(function (dislikeTrackIds) {
-        let playlistTrackIds = getTrackIds(playlist.tracks);
-        playlistTrackIds = playlistTrackIds.filter((item) => !dislikeTrackIds.some((dislikeTrack) => dislikeTrack.id == item.id));
-        updateTracksWithFilter(playlist, playlistTrackIds);
+function onClickControlDislikesTracks(playlist) {
+    fireSelectSwal({
+        title: 'Управление диз/лайками',
+        inputPlaceholder: 'Выберите действие',
+        inputOptions: {
+            removeDislikes: 'Удалить только дизлайки',
+            removeLikes: 'Удалить только лайки',
+            removeFAV: 'Удалить оба типа',
+        },
+    }).then((action) => {
+        if (!action.isConfirmed) {
+            return;
+        }
+
+        let ids = getTrackIds(playlist.tracks);
+        if (action.value == 'removeDislikes') {
+            removeDislikeIds(ids, callback);
+        } else if (action.value == 'removeLikes') {
+            removeLikeIds(ids, callback);
+        } else if (action.value == 'removeFAV') {
+            removeDislikeIds(ids, (trackIds) => removeLikeIds(trackIds, callback));
+        }
     });
+
+    function callback(tracksIds) {
+        updateTracksWithFilter(playlist, tracksIds);
+    }
 }
 
-function onClickRemoveMixTracks(playlist) {
+function onClickControlMixTracks(playlist) {
     Swal.fire({
         title: 'Выберите что удалять',
         html:

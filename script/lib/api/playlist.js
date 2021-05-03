@@ -81,21 +81,20 @@ function checkStoredPlaylists(data, callback) {
 }
 
 function promptActionWithPlaylist(callback) {
-    fireSelectSwal(
-        {
-            title: 'Способ создания плейлиста',
-            inputPlaceholder: 'Выберите действие',
-            inputOptions: {
-                newEveryTime: 'Новый плейлист',
-                updateIfExists: 'Обновить существующий',
-                appendToExists: 'Добавить в существующий',
-            },
+    fireSelectSwal({
+        title: 'Способ создания плейлиста',
+        inputPlaceholder: 'Выберите действие',
+        inputOptions: {
+            newEveryTime: 'Новый плейлист',
+            updateIfExists: 'Обновить существующий',
+            appendToExists: 'Добавить в существующий',
         },
-        (result) => {
+    }).then((action) => {
+        if (action.isConfirmed) {
             fireLoadingSwal('Действие выполняется..');
-            callback(result);
+            callback(action.value);
         }
-    );
+    });
 }
 
 function createCopyOfPlaylist(playlist, callback) {

@@ -66,7 +66,7 @@ function fireYesNoSwal(json, callback) {
 }
 
 function fireSelectSwal(json, callback) {
-    Swal.fire({
+    return Swal.fire({
         title: json.title,
         text: json.text,
         input: 'select',
@@ -77,9 +77,5 @@ function fireSelectSwal(json, callback) {
         cancelButtonColor: '#d33',
         confirmButtonText: 'OK',
         confirmButtonColor: '#3085d6',
-    }).then((action) => {
-        if (action.isConfirmed) {
-            callback(action.value);
-        }
     });
 }

@@ -572,7 +572,7 @@ function collectFromHistory(playlist) {
 function collectDislikes(playlist) {
     fireCollectorSwal(playlist.title);
     toggleDropdown('usermusicCollectorMain');
-    receiveFavoriteTrackIds(function (trackIds) {
+    receiveFavoriteTrackIds(FAV_TYPE.DISLIKE, function (trackIds) {
         playlist.trackIds = trackIds;
         patchPlaylistWithRedirect(playlist);
     });
@@ -696,10 +696,18 @@ function createPlaylistFromLastfmContent(playlist, content) {
 
 //#endregion
 
+function removeLikeIds(trackIds, callback) {
+    removeFavoriteTrackIds(trackIds, FAV_TYPE.LIKE, callback);
+}
+
 function removeDislikeIds(trackIds, callback) {
-    receiveFavoriteTrackIds((responseJSON) => {
+    removeFavoriteTrackIds(trackIds, FAV_TYPE.DISLIKE, callback);
+}
+
+function removeFavoriteTrackIds(trackIds, type, callback) {
+    receiveFavoriteTrackIds(type, (favoriteIds) => {
         for (let i = 0; i < trackIds.length; i++) {
-            if (searchIdBinary(trackIds[i].id, responseJSON) != -1) {
+            if (searchIdBinary(trackIds[i].id, favoriteIds) != -1) {
                 trackIds.splice(i, 1);
                 i--;
             }

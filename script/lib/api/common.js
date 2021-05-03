@@ -25,6 +25,11 @@ const LASTFM_STATION = `https://www.last.fm/player/station/user/`;
 
 const PICSUM_RANDOM_PHOTO = `https://picsum.photos/%%`;
 
+const FAV_TYPE = {
+    LIKE: 1,
+    DISLIKE: -1,
+};
+
 let sign, owner, uid, loginLastfm;
 
 // Content scripts running at "document_idle" do not need to listen for the window.onload event,
@@ -63,11 +68,11 @@ function getArgsByLocation() {
     }
 }
 
-function formatFavoriteListToTrackIds(favJSON) {
+function formatFavoriteListToTrackIds(favJSON, type) {
     let items = [];
     let tempKeys = Object.keys(favJSON);
     for (let i = 0; i < tempKeys.length; i++) {
-        if (favJSON[tempKeys[i]] == -1) {
+        if (favJSON[tempKeys[i]] == type) {
             items.push({ id: tempKeys[i] });
         }
     }

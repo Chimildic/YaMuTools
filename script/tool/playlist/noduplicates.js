@@ -5,7 +5,7 @@ const NODUPLICATE_MENU_ITEM = {
     handler: onClickNoDuplicate,
 };
 
-function onClickNoDuplicate() {
+async function onClickNoDuplicate() {
     toggleDropdown('menuPlaylistMain');
     fireLoadingSwal(getMessage('noduplicate_processing'), NODUPLICATE_MENU_ITEM.title);
     receivePlaylistByLocation((playlist) => {
@@ -28,34 +28,35 @@ function onClickNoDuplicate() {
                 return;
             }
 
-            fireSelectSwal(
-                {
-                    title: 'Поиск дубликатов',
-                    text: 'Создана копия оригинального плейлиста. Найдены дубликаты. Какой плейлист изменить?',
-                    inputPlaceholder: getMessage('noduplicates_case_choose'),
-                    inputOptions: {
-                        original: getMessage('noduplicates_case_original'),
-                        copy: getMessage('noduplicates_case_copy'),
-                    },
+            fireSelectSwal({
+                title: 'Поиск дубликатов',
+                text: 'Создана копия оригинального плейлиста. Найдены дубликаты. Какой плейлист изменить?',
+                inputPlaceholder: getMessage('noduplicates_case_choose'),
+                inputOptions: {
+                    original: getMessage('noduplicates_case_original'),
+                    copy: getMessage('noduplicates_case_copy'),
                 },
-                (result) => {
-                    let data = {
-                        trackCount: playlist.trackCount,
-                        trackIds: separatedTracks.trackIds,
-                    };
-
-                    if (result == 'original') {
-                        data.kind = playlist.kind;
-                        data.revision = playlist.revision;
-                    } else if (result == 'copy') {
-                        data.kind = copyPlaylist.kind;
-                        data.revision = copyPlaylist.revision;
-                    }
-
-                    separatedTracks.kind = data.kind;
-                    replaceAllTracks(data, () => showResultNoDuplicate(separatedTracks));
+            }).then((action) => {
+                if (!action.isConfirmed) {
+                    return;
                 }
-            );
+
+                let data = {
+                    trackCount: playlist.trackCount,
+                    trackIds: separatedTracks.trackIds,
+                };
+
+                if (action.value == 'original') {
+                    data.kind = playlist.kind;
+                    data.revision = playlist.revision;
+                } else if (action.value == 'copy') {
+                    data.kind = copyPlaylist.kind;
+                    data.revision = copyPlaylist.revision;
+                }
+
+                separatedTracks.kind = data.kind;
+                replaceAllTracks(data, () => showResultNoDuplicate(separatedTracks));
+            });
         });
     });
 }
