@@ -704,6 +704,13 @@ function removeDislikeIds(trackIds, callback) {
     removeFavoriteTrackIds(trackIds, FAV_TYPE.DISLIKE, callback);
 }
 
+function removeAllExceptLikes(trackIds, callback) {
+    receiveFavoriteTrackIds(FAV_TYPE.LIKE, (likeIds) => {
+        let filteredTrackIds = trackIds.filter((item) => likeIds.some((likeTrack) => likeTrack.id == item.id));
+        callback(filteredTrackIds);
+    });
+}
+
 function removeFavoriteTrackIds(trackIds, type, callback) {
     receiveFavoriteTrackIds(type, (favoriteIds) => {
         for (let i = 0; i < trackIds.length; i++) {

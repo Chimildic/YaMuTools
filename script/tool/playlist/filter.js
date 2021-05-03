@@ -50,6 +50,7 @@ function onClickControlDislikesTracks(playlist) {
             removeDislikes: 'Удалить только дизлайки',
             removeLikes: 'Удалить только лайки',
             removeFAV: 'Удалить оба типа',
+            removeAllExceptLikes: 'Оставить только лайки',
         },
     }).then((action) => {
         if (!action.isConfirmed) {
@@ -63,6 +64,8 @@ function onClickControlDislikesTracks(playlist) {
             removeLikeIds(ids, callback);
         } else if (action.value == 'removeFAV') {
             removeDislikeIds(ids, (trackIds) => removeLikeIds(trackIds, callback));
+        } else if (action.value == 'removeAllExceptLikes') {
+            removeAllExceptLikes(ids, callback);
         }
     });
 
@@ -111,10 +114,15 @@ function onClickRemoveRuTracks(playlist) {
 }
 
 function updateTracksWithFilter(playlist, ids) {
+    let trackIds = ids || getTrackIds(playlist.tracks);
+    if (playlist.trackCount == trackIds.length) {
+        fireInfoSwal('Не обнаружено треков для удаления');
+        return;
+    }
     replaceAllTracks(
         {
             trackCount: playlist.trackCount,
-            trackIds: ids ? ids : getTrackIds(playlist.tracks),
+            trackIds: trackIds,
             kind: playlist.kind,
             revision: playlist.revision,
         },
