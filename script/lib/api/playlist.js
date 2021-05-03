@@ -215,6 +215,10 @@ function setRandomCover(kind, callback) {
 function replaceAllTracks(data, callback) {
     refreshSign(() => {
         removeAllTracks(data, (responseJSON) => {
+            if (data.trackIds.length == 0) {
+                callback(responseJSON);
+                return;
+            }
             insertTracks(
                 {
                     kind: responseJSON.playlist.kind,
