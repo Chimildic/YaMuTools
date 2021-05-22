@@ -8,8 +8,8 @@ function receivePlaylistByLocation(callback) {
     receivePlaylist(getArgsByLocation(), callback);
 }
 
-function receivePlaylistByKind(kind, callback) {
-    receivePlaylist({ owner: owner, kind: kind }, callback);
+function receivePlaylistByKind(kind) {
+    return new Promise((resolve, reject) => receivePlaylist({ owner: owner, kind: kind }, (playlist) => resolve(playlist)));
 }
 
 function receivePlaylist(args, callback) {
@@ -139,25 +139,24 @@ function appendPlaylist(data, callback) {
 }
 
 function getCreatedPlaylistByType(type, callback) {
-    chrome.storage.sync.get(['createdPlaylists'], function (items) {
+    chrome.storage.sync.get(['createdPlaylists'], async function (items) {
         if (!items.createdPlaylists.hasOwnProperty(type)) {
             callback({ success: false });
             return;
         }
 
-        receivePlaylistByKind(items.createdPlaylists[type], (playlist) => {
-            if (!playlist.hasOwnProperty('message')) {
-                callback({
-                    success: true,
-                    kind: playlist.kind,
-                    revision: playlist.revision,
-                    trackCount: playlist.trackCount,
-                });
-            } else {
-                removeCreatedPlaylist(type);
-                callback({ success: false });
-            }
-        });
+        let playlist = await receivePlaylistByKind(items.createdPlaylists[type]);
+        if (!playlist.hasOwnProperty('message')) {
+            callback({
+                success: true,
+                kind: playlist.kind,
+                revision: playlist.revision,
+                trackCount: playlist.trackCount,
+            });
+        } else {
+            removeCreatedPlaylist(type);
+            callback({ success: false });
+        }
     });
 }
 

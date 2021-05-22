@@ -27,6 +27,10 @@ const FILTER_CONTEXT_MENU = {
             title: 'Удалить кириллицу',
             handler: () => onClickFilterTool(onClickRemoveRuTracks),
         },
+        {
+            title: 'Вычитание треков',
+            handler: () => onClickFilterTool(onClickRemoveFromOtherPlaylists),
+        },
     ],
 };
 
@@ -150,6 +154,42 @@ async function onClickRemoveHistoryTracks(playlist) {
             });
             updateTracksWithFilter(playlist);
         });
+    });
+}
+
+function onClickRemoveFromOtherPlaylists(sourcePlaylist) {
+    receiveAllPlaylists(playlists => {
+        let html = '';
+        playlists.forEach((p) => {
+            html += `<p><input type="checkbox" id="choose-${p.kind}"/> <label for="choose-${p.kind}">${p.title}</label><p/>`;
+        });
+        html = `<div><p>Выберите плейлисты, треки которых нужно удалить из текущего плейлиста "${sourcePlaylist.title}"</p></div></br><div style="display:flex;overflow-y:scroll;height: 200px"><div style="text-align:left;margin:auto;">${html}</div></div>`;
+
+        Swal.fire({
+            title: 'Вычитание',
+            html: html,
+            confirmButtonText: 'Продолжить',
+            preConfirm: () => {
+                let elements = Swal.getPopup().querySelectorAll('[id*=choose-]');
+                let values = [];
+                elements.forEach((e) => {
+                    if (e.checked) {
+                        values.push(e.id.split('-')[1]);
+                    }
+                });
+                return values;
+            },
+        }).then(async result => {
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            for (let i = 0; i < result.value.length; i++) {
+                let playlist = await receivePlaylistByKind(result.value[i]);
+                sourcePlaylist.tracks = sourcePlaylist.tracks.filter((track) => !playlist.tracks.some(item => item.id == track.id));
+            }
+            updateTracksWithFilter(sourcePlaylist);
+        })
     });
 }
 
