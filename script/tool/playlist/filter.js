@@ -16,6 +16,10 @@ const FILTER_CONTEXT_MENU = {
             handler: () => onClickFilterTool(onClickControlMixTracks),
         },
         {
+            title: 'Удалить недавно игравшие',
+            handler: () => onClickFilterTool(onClickRemoveHistoryTracks),
+        },
+        {
             title: 'Удалить с пометкой "Е"',
             handler: () => onClickFilterTool(onClickRemoveExplicitTracks),
         },
@@ -111,6 +115,42 @@ function onClickControlMixTracks(playlist) {
 function onClickRemoveRuTracks(playlist) {
     playlist.tracks = matchExcept(playlist.tracks, '[а-яА-ЯёЁ]+');
     updateTracksWithFilter(playlist);
+}
+
+async function onClickRemoveHistoryTracks(playlist) {
+    Swal.fire({
+        title: 'История прослушиваний',
+        input: 'text',
+        text: 'Сколько недавних треков из истории учитывать?',
+        inputValue: 500,
+        showCancelButton: true,
+        cancelButtonText: 'Отмена',
+        inputValidator: (value) => {
+            if (!/^[1-9]\d*$/.test(value)) {
+                return 'Некорректное число';
+            }
+        }
+    }).then(result => {
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        receiveHistory((response) => {
+            if (!response.hasTracks) {
+                fireInfoSwal('В истории прослушиваний нет треков.');
+                return;
+            }
+
+            response.trackIds.length = parseInt(result.value);
+            playlist.tracks = playlist.tracks.filter((track) => {
+                if (!track.id || !track.albums || track.albums.length == 0) {
+                    return false;
+                }
+                return !response.trackIds.includes(`${track.id}:${track.albums[0].id}`);
+            });
+            updateTracksWithFilter(playlist);
+        });
+    });
 }
 
 function updateTracksWithFilter(playlist, ids) {
