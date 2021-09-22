@@ -2,7 +2,7 @@
     "name": "__MSG_ext_name__",
     "short_name": "__MSG_ext_short_name__",
     "description": "__MSG_ext_description__",
-    "version": "0.7.2",
+    "version": "0.7.3",
     "manifest_version": 2,
     "author": "Chimildic",
     "default_locale": "ru",
@@ -16,7 +16,13 @@
                 "https://music.yandex.kz/*",
                 "https://music.yandex.com/*",
                 "https://music.yandex.uz/*",
-                "https://music.yandex.ua/*"
+                "https://music.yandex.ua/*",
+                "https://radio.yandex.ru/*",
+                "https://radio.yandex.by/*",
+                "https://radio.yandex.kz/*",
+                "https://radio.yandex.com/*",
+                "https://radio.yandex.uz/*",
+                "https://radio.yandex.ua/*"
             ],
             "js": [
                 "/script/lib/localization.js",
@@ -52,15 +58,17 @@
 
                 "/script/domain/modcreator.js",
                 "/script/domain/options.js",
+
                 "/script/domain/content.js",
                 "/script/domain/feedback.js"
             ]
         }
     ],
+    "web_accessible_resources": ["/script/domain/player.js"],
     "background": {
         "scripts": ["/script/background/background.js", "/script/background/options.js", "/script/background/request.js"],
         "persistent": false
-      },
+    },
     "browser_action": {},
     "options_page": "/page/options.html",
     "icons": {

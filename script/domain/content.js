@@ -1,3 +1,4 @@
+addPlayerInjection();
 addUserPicEventListener();
 document.onclick = onClickOutsideDropdown;
 
@@ -20,6 +21,12 @@ function onOptionsChanged(changes) {
     } else {
         fillContent('options');
     }
+}
+
+function addPlayerInjection() {
+    let script = document.createElement("script");
+    script.src = chrome.runtime.getURL("script/domain/player.js");
+    document.body.appendChild(script);
 }
 
 function fillContent(message) {
