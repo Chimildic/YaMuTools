@@ -41,9 +41,10 @@ function getAvailableModify() {
 }
 
 function modifyNavTabs() {
-    chrome.storage.sync.get(['onFeedTab', 'onPodcastHater', 'onUserTab', 'dataUserTab'], function (items) {
-        items.onPodcastHater ? removePodcastTab() : addPodcastTab();
-        items.onUserTab ? addUserTab(items.dataUserTab) : removeUserTab();
+    chrome.storage.sync.get(['onFeedTab', 'onPodcastHater', 'onUserTab', 'dataUserTab', 'onRemoveNavKids'], function (items) {
+        items.onPodcastHater && removeNavTab('non-music');
+        items.onRemoveNavKids  && removeNavTab('kids');
+        items.onUserTab ? insertUserNavTab(items.dataUserTab.title, items.dataUserTab.url, 'userTabId') : removeById('userTabId');
     });
 }
 

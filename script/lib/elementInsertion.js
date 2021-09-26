@@ -115,17 +115,15 @@ function removeDropdown() {
     }
 }
 
-//#region Helper
 function updateNavTabs() {
-    navTabs = document.getElementsByClassName('nav__tab');
+    navTabs = document.getElementsByClassName('nav-kids__tab');
     updateIndexOfNavTabs();
 }
 
 function updateIndexOfNavTabs() {
     indexNavTabs = {};
     for (i = 0; i < navTabs.length; i++) {
-        name = navTabs[i].getAttribute('data-name');
+        let name = navTabs[i].getAttribute('data-name');
         indexNavTabs[name] = i;
     }
 }
-//#endregion

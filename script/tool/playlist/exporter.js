@@ -6,12 +6,12 @@ const EXPORTER_MENU_ITEM = {
 
 function onClickExporterTool() {
     toggleDropdown('menuPlaylistMain');
-    receiveTracksFromPlaylist((tracks) => outputTracksWithNewTab(tracks));
+    receiveTracksFromPlaylist((tracks) => outputTracksWithAlert(tracks));
 }
 
-function outputTracksWithNewTab(source) {
+function outputTracksWithAlert(source) {
     let header =
-        '<div class="unselectable"><h3>Инструкция</h3><ul><li>Скопируйте список треков (Ctrl + A, Ctrl + C)</li> <li>Перейдите на <a target="_blank" href="https://www.spotlistr.com/search/textbox">Spotlistr</a> или <a target="_blank" href="https://www.tunemymusic.com/ru/">TuneMyMusic</a></li> <li>Вставьте скопированный текст в форму</li><br></ul></div><style> .unselectable { -webkit-touch-callout: none; /* iOS Safari */ -webkit-user-select: none; /* Chrome/Safari/Opera */ -khtml-user-select: none; /* Konqueror */ -moz-user-select: none; /* Firefox */ -ms-user-select: none; /* Internet Explorer/Edge */ user-select: none; /* Non-prefixed version, currently not supported by any browser */}</style>';
+        'Скопируйте список треков, перейдите на spotlistr.com/search/textbox или tunemymusic.com, вставьте скопированный текст';
 
     let tracks = [];
     for (i = 0; i < source.length; i++) {
@@ -24,9 +24,5 @@ function outputTracksWithNewTab(source) {
         }
     }
 
-    openNewTab(header + tracks.join('\n'));
-}
-
-function openNewTab(str) {
-    window.open().document.body.appendChild(document.createElement('pre')).innerHTML = str;
+    alert(header + '\n\n' + tracks.join('\n'));
 }
