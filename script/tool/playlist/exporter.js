@@ -10,9 +10,6 @@ function onClickExporterTool() {
 }
 
 function outputTracksWithAlert(source) {
-    let header =
-        'Скопируйте список треков, перейдите на spotlistr.com/search/textbox или tunemymusic.com, вставьте скопированный текст';
-
     let tracks = [];
     for (i = 0; i < source.length; i++) {
         if (source[i].artists.length != 0 && source[i].title) {
@@ -24,5 +21,13 @@ function outputTracksWithAlert(source) {
         }
     }
 
-    alert(header + '\n\n' + tracks.join('\n'));
+    navigator.clipboard.writeText(tracks.join('\n'))
+        .then(() => {
+            Swal.fire({
+                html: '<p>Список треков скопирован в буфер обмена. Перейдите на <a target="_blank" href="https://spotlistr.com/search/textbox">spotlistr</a> или <a target="_blank" href="https://tunemymusic.com">tunemymusic</a> и вставьте его в поле.</p>'
+            })
+        }, (e) => {
+            console.error(e)
+            fireSwal('Ошибка при при копировании списка треков. Повторите попытку или сообщите об ошибке по обратной связи (ссылка в настройках)', 'error');
+        });
 }
