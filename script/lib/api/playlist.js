@@ -139,7 +139,7 @@ function appendPlaylist(data, callback) {
 }
 
 function getCreatedPlaylistByType(type, callback) {
-    chrome.storage.sync.get(['createdPlaylists'], async function (items) {
+    browser.storage.local.get(['createdPlaylists'], async function (items) {
         if (!items.createdPlaylists.hasOwnProperty(type)) {
             callback({ success: false });
             return;
@@ -161,20 +161,20 @@ function getCreatedPlaylistByType(type, callback) {
 }
 
 function getActionWithPlaylist(callback) {
-    chrome.storage.sync.get(['actionWithPlaylist'], function (items) {
+    browser.storage.local.get(['actionWithPlaylist'], function (items) {
         callback(items.actionWithPlaylist);
     });
 }
 
 function removeCreatedPlaylist(type) {
-    chrome.storage.sync.get(['createdPlaylists'], function (items) {
+    browser.storage.local.get(['createdPlaylists'], function (items) {
         delete items.createdPlaylists[type];
         saveOption('createdPlaylists', items.createdPlaylists);
     });
 }
 
 function saveMetaOfCreatedPlaylist(data) {
-    chrome.storage.sync.get(['createdPlaylists'], function (items) {
+    browser.storage.local.get(['createdPlaylists'], function (items) {
         items.createdPlaylists[data.type] = data.kind;
         saveOption('createdPlaylists', items.createdPlaylists);
     });
@@ -200,7 +200,7 @@ function setCover(kind, urlCover, callback) {
 }
 
 function setRandomCover(kind, callback) {
-    chrome.storage.sync.get(['onRandomCover'], function (items) {
+    browser.storage.local.get(['onRandomCover'], function (items) {
         if (!items.onRandomCover) {
             callback();
             return;
@@ -274,7 +274,7 @@ function redirectToPlaylist(kind) {
 }
 
 function incrementCreatedPlalist() {
-    chrome.storage.sync.get(['countCreatedPlaylist'], (items) => {
+    browser.storage.local.get(['countCreatedPlaylist'], (items) => {
         saveOption('countCreatedPlaylist', ++items.countCreatedPlaylist);
     });
 }

@@ -29,7 +29,7 @@ function backgroundFileGET(url, callback) {
 }
 
 function backgroundRequest(action, url, callback) {
-    chrome.runtime.sendMessage({ action: action, url: url }, (response) => callback(response));
+    browser.runtime.sendMessage({ action: action, url: url }, (response) => callback(response));
 }
 
 function requestFileGET(url, callback) {

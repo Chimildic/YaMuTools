@@ -391,7 +391,7 @@ function onItemClickPeriod(period) {
 }
 
 function setHeaderPeriod(title, id) {
-    document.getElementById(id).innerHTML = title;
+    document.getElementById(id).innerText = title;
 }
 
 function swithBetweenMainAndNew() {
@@ -599,7 +599,7 @@ function collectDiscography() {
 function collectNewReleases() {
     fireCollectorSwal(selectedPlaylist.title);
     receiveNewReleaseAlbums(function (albums) {
-        chrome.storage.sync.get('onMixHater', function (item) {
+        browser.storage.local.get('onMixHater', function (item) {
             selectedPlaylist.albums = albums;
             if (item.onMixHater) {
                 selectedPlaylist.description += ` ${getMessage('pls_desc_mix_removed')}.`;

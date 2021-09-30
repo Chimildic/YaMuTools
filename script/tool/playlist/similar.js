@@ -10,7 +10,7 @@ function onClickSimilarPlaylist() {
     receivePlaylistByLocation((playlist) => {
         shuffle(playlist.tracks);
         playlist.tracks.length = roundLength(playlist.tracks.length, 500);
-        chrome.storage.sync.get(['similarPlaylistCountTracks', 'similarThreshold'], (items) => {
+        browser.storage.local.get(['similarPlaylistCountTracks', 'similarThreshold'], (items) => {
             collectSimilarTracksLastfm(formatTracksToNamesForLastmSimilar(playlist.tracks), items.similarThreshold, (response) => {
                 shuffle(response);
                 response.length = roundLength(response.length, 250);

@@ -4,13 +4,11 @@ const RadioRepeater = (function () {
     const PLACE_MUSIC = '.player-controls__seq-controls';
     const PLACE_RADIO = '.player-controls__bar';
 
-    let button;
     externalAPI.on(externalAPI.EVENT_READY, addButton);
     externalAPI.on(externalAPI.EVENT_CONTROLS, addButton);
 
     function getButton() {
-        button = button || document.getElementById(ID_REPEAT_RADIO_BUTTON);
-        return button;
+        return document.getElementById(ID_REPEAT_RADIO_BUTTON);
     }
 
     function addButton() {

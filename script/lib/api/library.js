@@ -30,7 +30,7 @@ function checkLastfmUser(callback) {
 }
 
 function getReassignLoginLastfm(callback) {
-    chrome.storage.sync.get(['reassignLoginLastfm'], (items) => {
+    browser.storage.local.get(['reassignLoginLastfm'], (items) => {
         callback(items.reassignLoginLastfm);
     });
 }

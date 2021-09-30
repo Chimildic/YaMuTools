@@ -1,7 +1,7 @@
 # YaMuTools
 Расширение добавляет новые возможности на сайт Яндекс.Музыки
 
-Доступно в [Google Web Store](https://chrome.google.com/webstore/detail/dgjneghdfaeajjemeklgmbojeeplehah)
+Доступно в [Google Web Store](https://browser.google.com/webstore/detail/dgjneghdfaeajjemeklgmbojeeplehah)
 
 ## Возможности
 - Создает много персонализированных плейлистов, в том числе на основе Last.fm
@@ -17,7 +17,7 @@
 - Работает в Chrome, Opera, Edge, Яндекс.Браузере и других на основе Chromium
 
 ## Установка в режиме разработчика
-1. Перейдите по адресу `chrome://extensions`
+1. Перейдите по адресу `browser://extensions`
 2. Найдите переключатель `режим разработчика`
 3. Перетащите [архив с расширением](https://github.com/Chimildic/YaMuTools/releases) на эту страницу или нажмите кнопку `загрузки распакованного расширения`
 

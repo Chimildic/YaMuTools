@@ -1,5 +1,5 @@
 function removePodcastElements() {
-    removePodcastTab();
+    removeNavTab('non-music');
     removePodcastPlaylist();
     addSliderButtonEventListener();
     removePodcastMainLine();

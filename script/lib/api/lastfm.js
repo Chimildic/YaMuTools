@@ -30,7 +30,7 @@ function receiveStationLastfm(arg, callback) {
             return;
         }
 
-        chrome.storage.sync.get(['requestLastfmRange'], function (items) {
+        browser.storage.local.get(['requestLastfmRange'], function (items) {
             let total = items.requestLastfmRange;
             let complete = 0;
             let tracks = [];

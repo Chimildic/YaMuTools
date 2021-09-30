@@ -1,7 +1,7 @@
-chrome.runtime.onInstalled.addListener(onInstalled);
-chrome.runtime.onMessage.addListener(onContentMessage);
-chrome.tabs.onUpdated.addListener(onTabsUpdated);
-chrome.browserAction.onClicked.addListener(openOptionsPage);
+browser.runtime.onInstalled.addListener(onInstalled);
+browser.runtime.onMessage.addListener(onContentMessage);
+browser.browserAction.onClicked.addListener(openOptionsPage);
+browser.tabs.onUpdated.addListener(onTabsUpdated);
 
 function onInstalled(details) {
     if (details.reason == 'install') {
@@ -13,7 +13,7 @@ function onInstalled(details) {
 
 function onContentMessage(message, sender, sendResponse) {
     if (message.action == 'openOptionsPage') {
-        openOptionsPage();
+        openOptionsPage(() => sendResponse({ success: true }));
     } else if (message.action == 'resetOptions') {
         setDefaultOptions(() => sendResponse({ success: true }));
     } else if (message.action == 'requestGET') {
@@ -26,16 +26,17 @@ function onContentMessage(message, sender, sendResponse) {
 
 function onTabsUpdated(tabId, changeInfo, tab) {
     if (tab.status == 'complete') {
-        chrome.tabs.sendMessage(tabId, { status: tab.status });
+        browser.tabs.sendMessage(tabId, { status: tab.status })
+        .catch((e) => e);
     }
 }
 
 function openOptionsPage() {
-    chrome.runtime.openOptionsPage();
+    browser.runtime.openOptionsPage();
 }
 
 function openChangelogWithUpdate() {
-    chrome.storage.sync.get(['openChangelogWithUpdate'], (items) => {
+    browser.storage.local.get(['openChangelogWithUpdate'], (items) => {
         if (items.openChangelogWithUpdate) {
             openChangelogPage();
         }
@@ -43,5 +44,5 @@ function openChangelogWithUpdate() {
 }
 
 function openChangelogPage() {
-    chrome.tabs.create({ url: '/page/changelog.html' });
+    browser.tabs.create({ url: '/page/changelog.html' });
 }

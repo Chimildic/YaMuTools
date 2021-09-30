@@ -1,9 +1,9 @@
 addPlayerInjection();
-addUserPicEventListener();
+addUserPicEventListener();    
 document.onclick = onClickOutsideDropdown;
 
-chrome.runtime.onMessage.addListener(onBackgroundMessage);
-chrome.storage.sync.onChanged.addListener(onOptionsChanged);
+browser.runtime.onMessage.addListener(onBackgroundMessage);
+browser.storage.onChanged.addListener(onOptionsChanged);
 
 function onBackgroundMessage(request, sender, sendResponse) {
     if (request.status == 'complete') {
@@ -25,7 +25,7 @@ function onOptionsChanged(changes) {
 
 function addPlayerInjection() {
     let script = document.createElement("script");
-    script.src = chrome.runtime.getURL("script/domain/player.js");
+    script.src = browser.runtime.getURL("script/domain/player.js");
     document.body.appendChild(script);
 }
 

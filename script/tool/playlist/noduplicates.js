@@ -12,7 +12,7 @@ async function onClickNoDuplicate() {
         let countLostTracks = removeLostTracks(playlist.tracks);
         playlist.trackCount = playlist.trackCount - countLostTracks;
         if (countLostTracks > 0) {
-            console.log(`Обнаружено и проигноировано ${countLostTracks} треков из-за отсутвия данных.`);
+            console.log(`Обнаружено и проигнорировано ${countLostTracks} треков из-за отсутвия данных.`);
         }
 
         let tracksClone = JSON.parse(JSON.stringify(playlist.tracks));

@@ -2,7 +2,7 @@
     "name": "__MSG_ext_name__",
     "short_name": "__MSG_ext_short_name__",
     "description": "__MSG_ext_description__",
-    "version": "0.7.3",
+    "version": "0.7.5",
     "manifest_version": 2,
     "author": "Chimildic",
     "default_locale": "ru",
@@ -66,11 +66,10 @@
     ],
     "web_accessible_resources": ["/script/domain/player.js"],
     "background": {
-        "scripts": ["/script/background/background.js", "/script/background/options.js", "/script/background/request.js"],
-        "persistent": false
+        "scripts": ["/script/background/background.js", "/script/background/options.js", "/script/background/request.js"]
     },
     "browser_action": {},
-    "options_page": "/page/options.html",
+    "options_ui": { "page": "/page/options.html" },
     "icons": {
         "16": "/icon/icon16.png",
         "24": "/icon/icon24.png",
@@ -81,4 +80,5 @@
         "256": "/icon/icon256.png",
         "512": "/icon/icon512.png"
     }
+
 }

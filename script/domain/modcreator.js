@@ -41,14 +41,16 @@ function getAvailableModify() {
 }
 
 function modifyNavTabs() {
-    chrome.storage.sync.get(['onFeedTab', 'onPodcastHater', 'onUserTab', 'dataUserTab'], function (items) {
-        items.onPodcastHater ? removePodcastTab() : addPodcastTab();
-        items.onUserTab ? addUserTab(items.dataUserTab) : removeUserTab();
+    browser.storage.local.get(['onFeedTab', 'onPodcastHater', 'onUserTab', 'dataUserTab', 'onRemoveNavKids'], function (items) {
+        items.onPodcastHater && removeNavTab('non-music');
+        items.onRemoveNavKids  && removeNavTab('kids');
+        items.onUserTab ? insertUserNavTab(items.dataUserTab.title, items.dataUserTab.url, 'userTabId') : removeById('userTabId');
     });
 }
 
+
 function modifyTeaserPlaylist() {
-    chrome.storage.sync.get(['offTeaserPlaylist'], function (items) {
+    browser.storage.local.get(['offTeaserPlaylist'], function (items) {
         let teaser = document.querySelector('.sidebar__under');
         if (items.offTeaserPlaylist && teaser) {
             teaser.remove();
@@ -57,7 +59,7 @@ function modifyTeaserPlaylist() {
 }
 
 function modifyUserMusicPage(key) {
-    chrome.storage.sync.get(['onCollectorTool', 'onLastfmCollector', 'onSpotifyCollector'], function (items) {
+    browser.storage.local.get(['onCollectorTool', 'onLastfmCollector', 'onSpotifyCollector'], function (items) {
         _ = items.onCollectorTool && key == PAGE_USERMUSIC_PLAYLISTS && isOwnerPage() ? addCollectorOfUserMusic(items.onLastfmCollector, items.onSpotifyCollector) : removeCollectorTool();
     });
 }
@@ -67,7 +69,7 @@ function modifyPlaylistPage(key) {
         return;
     }
 
-    chrome.storage.sync.get(['onLikerTool', 'onExporterTool', 'onRandomCover', 'onToolNoDuplicate'], function (items) {
+    browser.storage.local.get(['onLikerTool', 'onExporterTool', 'onRandomCover', 'onToolNoDuplicate'], function (items) {
         _ = items.onRandomCover ? addItemRandomCover() : removeItemRandomCover();
 
         addMenuPlaylist({
@@ -80,13 +82,13 @@ function modifyPlaylistPage(key) {
 }
 
 function modifyArtistPage(key) {
-    chrome.storage.sync.get(['onCollectorTool'], function (items) {
+    browser.storage.local.get(['onCollectorTool'], function (items) {
         _ = items.onCollectorTool && key == PAGE_ARTIST ? addCollectorOfArtist() : removeCollectorTool();
     });
 }
 
 function modifyPodcastElements() {
-    chrome.storage.sync.get(['onPodcastHater'], function (items) {
+    browser.storage.local.get(['onPodcastHater'], function (items) {
         if (items.onPodcastHater) {
             removePodcastElements();
         }

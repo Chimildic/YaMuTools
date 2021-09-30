@@ -6,13 +6,10 @@ const EXPORTER_MENU_ITEM = {
 
 function onClickExporterTool() {
     toggleDropdown('menuPlaylistMain');
-    receiveTracksFromPlaylist((tracks) => outputTracksWithNewTab(tracks));
+    receiveTracksFromPlaylist((tracks) => outputTracksWithAlert(tracks));
 }
 
-function outputTracksWithNewTab(source) {
-    let header =
-        '<div class="unselectable"><h3>Инструкция</h3><ul><li>Скопируйте список треков (Ctrl + A, Ctrl + C)</li> <li>Перейдите на <a target="_blank" href="https://www.spotlistr.com/search/textbox">Spotlistr</a> или <a target="_blank" href="https://www.tunemymusic.com/ru/">TuneMyMusic</a></li> <li>Вставьте скопированный текст в форму</li><br></ul></div><style> .unselectable { -webkit-touch-callout: none; /* iOS Safari */ -webkit-user-select: none; /* Chrome/Safari/Opera */ -khtml-user-select: none; /* Konqueror */ -moz-user-select: none; /* Firefox */ -ms-user-select: none; /* Internet Explorer/Edge */ user-select: none; /* Non-prefixed version, currently not supported by any browser */}</style>';
-
+function outputTracksWithAlert(source) {
     let tracks = [];
     for (i = 0; i < source.length; i++) {
         if (source[i].artists.length != 0 && source[i].title) {
@@ -24,9 +21,13 @@ function outputTracksWithNewTab(source) {
         }
     }
 
-    openNewTab(header + tracks.join('\n'));
-}
-
-function openNewTab(str) {
-    window.open().document.body.appendChild(document.createElement('pre')).innerHTML = str;
+    navigator.clipboard.writeText(tracks.join('\n'))
+        .then(() => {
+            Swal.fire({
+                html: '<p>Список треков скопирован в буфер обмена. Перейдите на <a target="_blank" href="https://spotlistr.com/search/textbox">spotlistr</a> или <a target="_blank" href="https://tunemymusic.com">tunemymusic</a> и вставьте его в поле.</p>'
+            })
+        }, (e) => {
+            console.error(e)
+            fireSwal('Ошибка при при копировании списка треков. Повторите попытку или сообщите об ошибке по обратной связи (ссылка в настройках)', 'error');
+        });
 }

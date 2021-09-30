@@ -1,5 +1,6 @@
 const DEFAULT_OPTIONS = {
     onPodcastHater: false,
+    onRemoveNavKids: false,
     onUserTab: false,
     dataUserTab: { title: '', url: '' },
     offTeaserPlaylist: false,
@@ -26,7 +27,7 @@ const DEFAULT_OPTIONS = {
 };
 
 function patchCurrentOptions(callback) {
-    chrome.storage.sync.get(null, (items) => {
+    browser.storage.local.get(null, (items) => {
         let defaultKeys = Object.keys(DEFAULT_OPTIONS);
         defaultKeys.forEach((key) => {
             if (!items.hasOwnProperty(key) || typeof items[key] != typeof DEFAULT_OPTIONS[key]) {
@@ -50,8 +51,8 @@ function setDefaultOptions(callback) {
 }
 
 function setOptions(json, callback) {
-    chrome.storage.sync.set(json, function () {
-        if (!chrome.runtime.lastError && callback) {
+    browser.storage.local.set(json, function () {
+        if (!browser.runtime.lastError && callback) {
             callback();
         }
     });

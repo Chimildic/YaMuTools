@@ -1,7 +1,7 @@
 remindToWriteFeedback();
 
 function remindToWriteFeedback(){
-    chrome.storage.sync.get(['showFeedbackAlert', 'lastShownFeedbackAlert', 'strDateInstall'], (items) => {
+    browser.storage.local.get(['showFeedbackAlert', 'lastShownFeedbackAlert', 'strDateInstall'], (items) => {
         if (items.showFeedbackAlert && canFireFeedback(items.lastShownFeedbackAlert, items.strDateInstall)){
             setLastShownFeedbackAlert();
             fireFeedbackSwal();
@@ -42,7 +42,7 @@ function fireFeedbackSwal(){
 }
 
 function openWebStorePage(){
-    window.open(`https://chrome.google.com/webstore/detail/${chrome.runtime.id}`);
+    window.open(`https://addons.mozilla.org/ru/firefox/addon/yamutools/`);
 }
 
 function setLastShownFeedbackAlert(){

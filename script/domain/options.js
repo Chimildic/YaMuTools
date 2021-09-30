@@ -19,7 +19,7 @@ function addEventListener(type, action, callback) {
 }
 
 function fillFooter() {
-    manifestData = chrome.runtime.getManifest();
+    manifestData = browser.runtime.getManifest();
     version.innerText = `${getMessage('ext_ver')} ${manifestData.version}`;
     author.innerText = `${manifestData.author}, ${new Date().getFullYear()}`;
     btnResetOptions.addEventListener('click', onClickResetOptions);
@@ -27,8 +27,8 @@ function fillFooter() {
 
 function restoreOptions() {
     // Pass in null to get the entire contents of storage.
-    // https://developer.chrome.com/extensions/storage#StorageArea-methods
-    chrome.storage.sync.get(null, function (items) {
+    // https://developer.browser.com/extensions/storage#StorageArea-methods
+    browser.storage.local.get(null, function (items) {
         restoreChecked(items);
         restoreContext(items);
         restoreLastfmLogin(items);
@@ -69,9 +69,9 @@ function restoreRange(data){
     let parseMethod = data.parseMethod;
     
     idRange.value = startValue;
-    idCurrent.innerHTML = idRange.value;
+    idCurrent.innerText = idRange.value;
     idRange.oninput = () =>{
-        idCurrent.innerHTML = idRange.value;
+        idCurrent.innerText = idRange.value;
     };
     idRange.addEventListener('change', debounce(() =>{
         saveOption(idRange.id, parseMethod(idRange.value));
@@ -144,7 +144,7 @@ function onClickResetOptions() {
             title: getMessage('info_reset_options'),
             icon: 'warning',
         },
-        () => chrome.runtime.sendMessage({ action: 'resetOptions' }, onLoadedPage)
+        () => browser.runtime.sendMessage({ action: 'resetOptions' }, onLoadedPage)
     );
 }
 
@@ -160,9 +160,9 @@ function saveOption(key, value) {
     option = {};
     option[key] = value;
 
-    chrome.storage.sync.set(option, function () {
-        if (chrome.runtime.lastError) {
-            fireErrorSwal(chrome.runtime.lastError.message, getMessage('error_storage_sync'));
+    browser.storage.local.set(option, function () {
+        if (browser.runtime.lastError) {
+            fireErrorSwal(browser.runtime.lastError.message, getMessage('error_storage_sync'));
         }
     });
 }

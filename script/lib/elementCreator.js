@@ -2,7 +2,7 @@ function createNavTab(title, path) {
     let a = document.createElement('a');
     a.className = 'nav__tab nav__link typo-nav typo-nav_contrast';
     a.setAttribute('data-name', path);
-    a.innerHTML = title;
+    a.innerText = title;
     a.href = path;
 
     return a;
@@ -52,7 +52,7 @@ function createMenu(data) {
         if (data.items[i].hasOwnProperty('header')) {
             addMenuHeader(li, data.items[i]);
         } else if (data.items[i].hasOwnProperty('title')) {
-            li.innerHTML = data.items[i].title;
+            li.innerText = data.items[i].title;
         }
 
         ul.append(li);
@@ -71,7 +71,7 @@ function addMenuHeader(li, item) {
     }
 
     if (item.hasOwnProperty('title')) {
-        title.innerHTML = item.title;
+        title.innerText = item.title;
     }
 
     li.className += ' header';
