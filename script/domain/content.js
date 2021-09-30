@@ -14,7 +14,7 @@ function onBackgroundMessage(request, sender, sendResponse) {
 }
 
 function onOptionsChanged(changes) {
-    if (changes.onUserTab || changes.dataUserTab) {
+    if (changes.onUserTab || changes.dataUserTab || changes.onPodcastHater || changes.onRemoveNavKids) {
         modifyNavTabs();
     } else if (changes.offTeaserPlaylist) {
         modifyTeaserPlaylist();

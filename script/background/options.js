@@ -1,5 +1,6 @@
 const DEFAULT_OPTIONS = {
     onPodcastHater: false,
+    onRemoveNavKids: false,
     onUserTab: false,
     dataUserTab: { title: '', url: '' },
     offTeaserPlaylist: false,
