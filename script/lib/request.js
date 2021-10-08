@@ -77,7 +77,7 @@ function requestOfType(data) {
         return;
     }
 
-    let request = new XMLHttpRequest();
+    let request = getXMLHttp();
     countRequest++;
     request.onreadystatechange = function () {
         if (request.readyState == 4) {
@@ -102,6 +102,17 @@ function requestOfType(data) {
 
     request.send(data.formData);
 }
+
+// Для корректной работы на Firefox
+// https://ru.stackoverflow.com/questions/1334892/Почему-возникает-ошибка-404-только-под-firefox
+function getXMLHttp(){
+    try {
+       return XPCNativeWrapper(new window.wrappedJSObject.XMLHttpRequest());
+    }
+    catch(evt){
+       return new XMLHttpRequest();
+    }
+ }
 
 function promisify(f) {
     return function (...args) {
