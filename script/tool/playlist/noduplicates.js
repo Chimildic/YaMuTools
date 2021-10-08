@@ -143,10 +143,18 @@ function compareTracks(track, nextTrack) {
     for (let i = 0; i < nextTrack.artists.length; i++) {
         let nextArtist = nextTrack.artists[i];
         for (let j = 0; j < track.artists.length; j++) {
-            if (track.artists[j].name == nextArtist.name && track.title == nextTrack.title) {
+            if (compareString(track.artists[j].name, nextArtist.name) &&
+                compareString(track.title, nextTrack.title)) {
                 return true;
             }
         }
+    }
+    return false;
+}
+
+function compareString(x, y) {
+    if (x && y) {
+        return x.formatName() == y.formatName();
     }
     return false;
 }
