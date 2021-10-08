@@ -24,6 +24,14 @@ const ORDER_CONTEXT_MENU = {
             handler: () => onClickOrderTool('artist', 'desc'),
         },
         {
+            title: 'По длительности (0-1)',
+            handler: () => onClickOrderTool('duration', 'asc'),
+        },
+        {
+            title: 'По длительности (1-0)',
+            handler: () => onClickOrderTool('duration', 'desc'),
+        },
+        {
             title: 'Случайно',
             handler: () => onClickOrderTool('random'),
         },
@@ -65,6 +73,8 @@ function sortPlaylistTracks(type, direction) {
             sortByTitle(playlist.tracks, direction);
         } else if (type == 'artist') {
             sortByArtist(playlist.tracks, direction);
+        } else if (type == 'duration') {
+            sortByDuration(playlist.tracks, direction);
         }
         replaceAllTracks(
             {
@@ -77,5 +87,18 @@ function sortPlaylistTracks(type, direction) {
                 redirectToPlaylist(playlist.kind);
             }
         );
+    });
+}
+
+function sortByDuration(tracks, direction) {
+    tracks.sort((x, y) => {
+        if (x && x.durationMs && y && y.durationMs) {
+            if (direction == 'asc') {
+                return x.durationMs - y.durationMs;
+            }
+            return y.durationMs - x.durationMs;
+        }
+        console.error('Ошибка при сортировке треков по продолжительности:', x, y);
+        return 1;
     });
 }
