@@ -69,7 +69,10 @@
         "scripts": ["/script/background/background.js", "/script/background/options.js", "/script/background/request.js"]
     },
     "browser_action": {},
-    "options_ui": { "page": "/page/options.html" },
+    "options_ui": {
+        "page": "/page/options.html",
+        "open_in_tab": true
+    },
     "icons": {
         "16": "/icon/icon16.png",
         "24": "/icon/icon24.png",
@@ -80,5 +83,4 @@
         "256": "/icon/icon256.png",
         "512": "/icon/icon512.png"
     }
-
 }
