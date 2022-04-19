@@ -8,6 +8,10 @@ const ORDER_CONTEXT_MENU = {
     items: [
         { header: true, title: 'Сортировка', handler: switchMainAndOrderContext },
         {
+            title: 'Случайно',
+            handler: () => onClickOrderTool('random'),
+        },
+        {
             title: 'По треку (А-Я)',
             handler: () => onClickOrderTool('track', 'asc'),
         },
@@ -24,16 +28,20 @@ const ORDER_CONTEXT_MENU = {
             handler: () => onClickOrderTool('artist', 'desc'),
         },
         {
+            title: 'По альбому (А-Я)',
+            handler: () => onClickOrderTool('album', 'asc'),
+        },
+        {
+            title: 'По альбому (Я-А)',
+            handler: () => onClickOrderTool('album', 'desc'),
+        },
+        {
             title: 'По длительности (0-1)',
             handler: () => onClickOrderTool('duration', 'asc'),
         },
         {
             title: 'По длительности (1-0)',
             handler: () => onClickOrderTool('duration', 'desc'),
-        },
-        {
-            title: 'Случайно',
-            handler: () => onClickOrderTool('random'),
         },
     ],
 };
@@ -73,6 +81,8 @@ function sortPlaylistTracks(type, direction) {
             sortByTitle(playlist.tracks, direction);
         } else if (type == 'artist') {
             sortByArtist(playlist.tracks, direction);
+        } else if (type == 'album') {
+            sortByAlbum(playlist.tracks, direction);
         } else if (type == 'duration') {
             sortByDuration(playlist.tracks, direction);
         }
@@ -101,4 +111,16 @@ function sortByDuration(tracks, direction) {
         console.error('Ошибка при сортировке треков по продолжительности:', x, y);
         return 1;
     });
+}
+
+function sortByAlbum(tracks, direction) {
+    tracks.sort((x, y) => {
+        if (x && x.albums && x.albums.length > 0 && y && y.albums && y.albums.length > 0) {
+            return direction == 'asc'
+                ? x.albums[0].title.localeCompare(y.albums[0].title)
+                : y.albums[0].title.localeCompare(x.albums[0].title);
+        }
+        console.error('Ошибка при сортировке треков по альбому:', x, y);
+        return 1;
+    })
 }
