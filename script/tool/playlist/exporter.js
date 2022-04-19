@@ -12,8 +12,9 @@ function onClickExporterTool() {
 function outputTracksWithAlert(source) {
     let tracks = [];
     for (i = 0; i < source.length; i++) {
-        if (source[i].artists.length != 0 && source[i].title) {
-            tracks.push(`${source[i].artists[0].name} - ${source[i].title}`);
+        if (source[i].artists && source[i].artists.length > 0 && source[i].title) {
+            let title = `${source[i].artists[0].name} ${source[i].title}`;
+            tracks.push(`${title} ${source[i].version || ''}`.trim().formatName());
         } else if (source[i].title) {
             alert(`У трека с индексом ${i + 1} (${source[i].title}) нет данных об исполнителе. Он будет пропущен.`);
         } else {
