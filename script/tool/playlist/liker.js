@@ -39,6 +39,7 @@ function onClickLikerOfTracks(args) {
 
 function markTracks(tracks, args) {
     let responseCount = 0;
+    tracks.reverse();
     for (let i = 0; i < tracks.length; i++) {
         markTrack(
             {

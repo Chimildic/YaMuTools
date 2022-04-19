@@ -12,6 +12,10 @@ const ORDER_CONTEXT_MENU = {
             handler: () => onClickOrderTool('random'),
         },
         {
+            title: 'В обратном порядке',
+            handler: () => onClickOrderTool('reverse'),
+        },
+        {
             title: 'По треку (А-Я)',
             handler: () => onClickOrderTool('track', 'asc'),
         },
@@ -48,6 +52,10 @@ const ORDER_CONTEXT_MENU = {
 
 function onClickOrderTool(type, direction) {
     toggleDropdown('orderMain');
+    if (type == 'reverse') {
+        sortPlaylistTracks(type, direction);
+        return;
+    }
     showSortAlert().then((result) => {
         if (result.isConfirmed) {
             sortPlaylistTracks(type, direction);
@@ -77,6 +85,8 @@ function sortPlaylistTracks(type, direction) {
     receivePlaylistByLocation((playlist) => {
         if (type == 'random') {
             shuffle(playlist.tracks);
+        } else if (type == 'reverse') {
+            playlist.tracks.reverse();
         } else if (type == 'track') {
             sortByTitle(playlist.tracks, direction);
         } else if (type == 'artist') {
