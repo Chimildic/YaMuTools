@@ -1,9 +1,9 @@
 chrome.runtime.onInstalled.addListener(onInstalled);
 chrome.runtime.onMessage.addListener(onContentMessage);
 chrome.tabs.onUpdated.addListener(onTabsUpdated);
-chrome.browserAction.onClicked.addListener(openOptionsPage);
+chrome.action.onClicked.addListener(openOptionsPage);
 
-function onInstalled(details) {
+function onInstalled(details) {   
     if (details.reason == 'install') {
         setDefaultOptions(() => openOptionsPage());
     } else if (details.reason == 'update') {

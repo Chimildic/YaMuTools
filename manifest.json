@@ -3,10 +3,11 @@
     "short_name": "__MSG_ext_short_name__",
     "description": "__MSG_ext_description__",
     "version": "0.8.0",
-    "manifest_version": 2,
+    "manifest_version": 3,
     "author": "Chimildic",
     "default_locale": "ru",
-    "permissions": ["storage", "https://avatars.yandex.net/*", "https://picsum.photos/*", "https://www.last.fm/*"],
+    "host_permissions": ["https://avatars.yandex.net/*", "https://picsum.photos/*", "https://www.last.fm/*"],
+    "permissions": ["storage"],
     "content_scripts": [
         {
             "run_at": "document_end",
@@ -65,13 +66,31 @@
             ]
         }
     ],
-    "web_accessible_resources": ["/script/domain/player.js"],
-    "background": {
-        "scripts": ["/script/background/background.js", "/script/background/options.js", "/script/background/request.js"],
-        "persistent": false
-    },
-    "browser_action": {},
+    "web_accessible_resources": [
+        {
+            "resources": ["/script/domain/player.js"],
+            "matches": [
+                "https://music.yandex.ru/*",
+                "https://music.yandex.by/*",
+                "https://music.yandex.kz/*",
+                "https://music.yandex.com/*",
+                "https://music.yandex.uz/*",
+                "https://music.yandex.ua/*",
+                "https://radio.yandex.ru/*",
+                "https://radio.yandex.by/*",
+                "https://radio.yandex.kz/*",
+                "https://radio.yandex.com/*",
+                "https://radio.yandex.uz/*",
+                "https://radio.yandex.ua/*"
+            ],
+            "extension_ids": []
+        }
+    ],
+    "action": {},
     "options_page": "/page/options.html",
+    "background": {
+        "service_worker": "background.js"
+    },
     "icons": {
         "16": "/icon/icon16.png",
         "24": "/icon/icon24.png",
