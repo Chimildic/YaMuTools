@@ -22,26 +22,13 @@ function backgroundGET(url, callback) {
     backgroundRequest('requestGET', url, (response) => callback(response));
 }
 
-function backgroundFileGET(url, callback) {
-    backgroundRequest('requestFileGET', url, (backgroungdUrl) => {
-        requestFileGET(backgroungdUrl, (file) => callback(file));
-    });
-}
-
 function backgroundRequest(action, url, callback) {
     chrome.runtime.sendMessage({ action: action, url: url }, (response) => callback(response));
 }
 
-function requestFileGET(url, callback) {
-    let request = new XMLHttpRequest();
-    request.responseType = 'blob';
-    request.onreadystatechange = function () {
-        if (request.readyState == 4) {
-            callback(request.response);
-        }
-    };
-    request.open('GET', url);
-    request.send();
+async function requestFileGET(url, callback) {
+    let r = await fetch(url);
+    r.blob().then(content => callback(content));
 }
 
 function requestFilePOST(url, formData, callback) {
