@@ -18,15 +18,17 @@ function onContentMessage(message, sender, sendResponse) {
         setDefaultOptions(() => sendResponse({ success: true }));
     } else if (message.action == 'requestGET') {
         requestGET(message.url, (response) => sendResponse(response));
-    } else if (message.action == 'requestFileGET') {
-        requestFileGET(message.url, (url) => sendResponse(url));
     }
     return true;
 }
 
 function onTabsUpdated(tabId, changeInfo, tab) {
     if (tab.status == 'complete') {
-        chrome.tabs.sendMessage(tabId, { status: tab.status });
+        chrome.tabs.sendMessage(tabId, { status: tab.status }, (response) => {
+            if (!chrome.runtime.lastError) {
+                // https://stackoverflow.com/a/69587523/5894542
+            }
+        });
     }
 }
 
