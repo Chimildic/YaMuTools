@@ -116,7 +116,7 @@
     "collector_menu_recom": { "message": "Рекомендации" },
     "collector_menu_new": { "message": "Новинки" },
     "noduplicate_title": { "message": "Поиск дубликатов" },
-    "noduplicate_processing": { "message": "Чем больше треков, тем дольше процесс." },
+    "noduplicate_processing": { "message": "Не закрывайте страницу! Названия исходных треков были скопированы в буфер обмена. Если что-то пойдет не так, вы можете восстановить плейлист здесь music.yandex.ru/import" },
     "noduplicate_nofound": { "message": "Дубликатов не найдено" },
     "noduplicate_error": { "message": "Ошибка при создании резервной копии плейлиста. Операция прервана." },
     "noduplicate_result": {

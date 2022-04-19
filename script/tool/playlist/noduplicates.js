@@ -12,7 +12,7 @@ async function onClickNoDuplicate() {
         let countLostTracks = removeLostTracks(playlist.tracks);
         playlist.trackCount = playlist.trackCount - countLostTracks;
         if (countLostTracks > 0) {
-            console.log(`Обнаружено и проигноировано ${countLostTracks} треков из-за отсутвия данных.`);
+            console.log(`Обнаружено и проигнорировано ${countLostTracks} треков из-за отсутствия данных.`);
         }
 
         let tracksClone = JSON.parse(JSON.stringify(playlist.tracks));
@@ -22,42 +22,17 @@ async function onClickNoDuplicate() {
             return;
         }
 
-        createCopyOfPlaylist(playlist, function (copyPlaylist) {
-            if (!copyPlaylist || copyPlaylist.trackCount != playlist.trackCount) {
-                fireErrorSwal(getMessage('noduplicate_error'));
-                return;
-            }
+        copyTracksToClipbloard(playlist.tracks);
 
-            fireSelectSwal({
-                title: 'Поиск дубликатов',
-                text: 'Создана копия оригинального плейлиста. Найдены дубликаты. Какой плейлист изменить?',
-                inputPlaceholder: getMessage('noduplicates_case_choose'),
-                inputOptions: {
-                    original: getMessage('noduplicates_case_original'),
-                    copy: getMessage('noduplicates_case_copy'),
-                },
-            }).then((action) => {
-                if (!action.isConfirmed) {
-                    return;
-                }
+        let data = {
+            trackCount: playlist.trackCount,
+            trackIds: separatedTracks.trackIds,
+            kind: playlist.kind,
+            revision: playlist.revision,
+        }
 
-                let data = {
-                    trackCount: playlist.trackCount,
-                    trackIds: separatedTracks.trackIds,
-                };
-
-                if (action.value == 'original') {
-                    data.kind = playlist.kind;
-                    data.revision = playlist.revision;
-                } else if (action.value == 'copy') {
-                    data.kind = copyPlaylist.kind;
-                    data.revision = copyPlaylist.revision;
-                }
-
-                separatedTracks.kind = data.kind;
-                replaceAllTracks(data, () => showResultNoDuplicate(separatedTracks));
-            });
-        });
+        separatedTracks.kind = data.kind;
+        replaceAllTracks(data, () => showResultNoDuplicate(separatedTracks));
     });
 }
 
@@ -218,11 +193,11 @@ function sortByArtist(tracks, direction = 'asc') {
 }
 
 function sortByRealIdAsc(tracks) {
-    tracks.sort((x, y) => x.realId - y.realId);
+    tracks.sort((x, y) => `${x.realId}`.localeCompare(`${y.realId}`, undefined, { numeric: true }));
 }
 
 function sortByIdAsc(tracks) {
-    tracks.sort((x, y) => x.id - y.id);
+    tracks.sort((x, y) => `${x.id}`.localeCompare(`${y.id}`, undefined, { numeric: true }));
 }
 
 function sortByIndexAsc(tracks) {
