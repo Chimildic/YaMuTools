@@ -26,8 +26,11 @@ function onContentMessage(message, sender, sendResponse) {
 
 function onTabsUpdated(tabId, changeInfo, tab) {
     if (tab.status == 'complete') {
-        browser.tabs.sendMessage(tabId, { status: tab.status })
-        .catch((e) => e);
+        browser.tabs.sendMessage(tabId, { status: tab.status }, (response) => {
+            if (!browser.runtime.lastError) {
+                // https://stackoverflow.com/a/69587523/5894542
+            }
+        });
     }
 }
 

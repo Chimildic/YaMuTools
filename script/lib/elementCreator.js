@@ -14,7 +14,7 @@ function createDropdown(data) {
     data.menus.forEach((data) => dropdown.append(createMenu(data)));
 
     let style = document.createElement('style');
-    style.innerHTML = `::-webkit-scrollbar { width: 0px; } .menu_width{ width: ${data.width}px; } .dropbtn { border: none; cursor: pointer; } .dropdown { text-align: left; position: relative; display: inline-block; z-index: 77; } .dropdown-content { display: none; position: absolute; min-width: 160px; box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .4); } .dropdown-content li { padding: 10px 16px; text-decoration: none; display: block; background-color: #222; } .show { display: block; } .header {border-bottom-width: 1px; border-bottom-style: solid; border-color: #e5e5e545;}`;
+    style.innerHTML = `.dropdown > ::-webkit-scrollbar { width: 0px; } .menu_width{ width: ${data.width}px; } .dropbtn { border: none; cursor: pointer; } .dropdown { text-align: left; position: relative; display: inline-block; z-index: 77; } .dropdown-content { display: none; position: absolute; min-width: 160px; box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .4); } .dropdown-content li { padding: 10px 16px; text-decoration: none; display: block; background-color: #222; } .show { display: block; } .header {border-bottom-width: 1px; border-bottom-style: solid; border-color: #e5e5e545;}`;
 
     let root = document.createElement('span');
     root.id = data.id;

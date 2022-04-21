@@ -147,10 +147,16 @@ async function onClickRemoveHistoryTracks(playlist) {
 
             response.trackIds.length = parseInt(result.value);
             playlist.tracks = playlist.tracks.filter((track) => {
-                if (!track.id || !track.albums || track.albums.length == 0) {
+                if (!track.id) {
                     return false;
                 }
-                return !response.trackIds.includes(`${track.id}:${track.albums[0].id}`);
+                try {
+                    let albumId = track.filename ? '' : track.albums[0].id;
+                    let id = `${track.id}${albumId.length == 0 ? (':' + albumId) : ''}`;
+                    return !response.trackIds.includes(id);
+                } catch (error) {
+                    return false;
+                }
             });
             updateTracksWithFilter(playlist);
         });
