@@ -71,7 +71,7 @@ function onClickControlDislikesTracks(playlist) {
         } else if (action.value == 'removeLikes') {
             removeLikeIds(ids, callback);
         } else if (action.value == 'removeFAV') {
-            removeDislikeIds(ids, (trackIds) => removeLikeIds(trackIds, callback));
+            removeFav(ids, callback);
         } else if (action.value == 'removeAllExceptLikes') {
             removeAllExceptLikes(ids, callback);
         }
@@ -142,24 +142,24 @@ async function onClickRemoveHistoryTracks(playlist) {
         receiveHistory()
             .then(history => {
                 if (!history.hasTracks) {
-                fireInfoSwal('В истории прослушиваний нет треков.');
-                return;
-            }
+                    fireInfoSwal('В истории прослушиваний нет треков.');
+                    return;
+                }
 
                 let value = parseInt(result.value);
                 if (history.trackIds.length > value) {
                     history.trackIds.length = value;
                 }
                 let historyIds = history.trackIds.map(id => `${id}`.split(':')[0]);
-            playlist.tracks = playlist.tracks.filter((track) => {
+                playlist.tracks = playlist.tracks.filter((track) => {
                     let result = !historyIds.includes(track.id);
                     if (result && track.id != track.realId) {
                         return !historyIds.includes(track.realId);
-                }
+                    }
                     return result;
+                });
+                updateTracksWithFilter(playlist);
             });
-            updateTracksWithFilter(playlist);
-        });
     });
 }
 
