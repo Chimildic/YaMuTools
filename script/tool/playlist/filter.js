@@ -139,24 +139,24 @@ async function onClickRemoveHistoryTracks(playlist) {
             return;
         }
 
-        receiveHistory((response) => {
-            if (!response.hasTracks) {
+        receiveHistory()
+            .then(history => {
+                if (!history.hasTracks) {
                 fireInfoSwal('В истории прослушиваний нет треков.');
                 return;
             }
 
-            response.trackIds.length = parseInt(result.value);
+                let value = parseInt(result.value);
+                if (history.trackIds.length > value) {
+                    history.trackIds.length = value;
+                }
+                let historyIds = history.trackIds.map(id => `${id}`.split(':')[0]);
             playlist.tracks = playlist.tracks.filter((track) => {
-                if (!track.id) {
-                    return false;
+                    let result = !historyIds.includes(track.id);
+                    if (result && track.id != track.realId) {
+                        return !historyIds.includes(track.realId);
                 }
-                try {
-                    let albumId = track.filename ? '' : track.albums[0].id;
-                    let id = `${track.id}${albumId.length == 0 ? (':' + albumId) : ''}`;
-                    return !response.trackIds.includes(id);
-                } catch (error) {
-                    return false;
-                }
+                    return result;
             });
             updateTracksWithFilter(playlist);
         });
