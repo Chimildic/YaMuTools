@@ -1,12 +1,15 @@
 function receiveNewReleaseAlbums(callback) {
     requestGET(HANDLER_NEW_RELEASES, (responseJSON) =>
-        receiveAlbumsById(responseJSON.newReleases, (albums) => appendTracksToAlbums(albums, callback))
+        receiveAlbumsById(responseJSON.newReleases)
+            .then((albums) => appendTracksToAlbums(albums, callback))
     );
 }
 
-function receiveAlbumsById(ids, callback) {
-    let url = `${HANDLER_ALBUMS}?albumIds=${ids}`;
-    requestGET(url, (responseJSON) => callback(responseJSON));
+function receiveAlbumsById(ids) {
+    return new Promise(resolve => {
+        let url = `${HANDLER_ALBUMS}?albumIds=${ids}`;
+        requestGET(url, (responseJSON) => resolve(responseJSON));
+    })
 }
 
 function appendTracksToAlbums(albums, callback) {

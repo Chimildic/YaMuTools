@@ -73,7 +73,7 @@ function formatFavoriteListToTrackIds(favJSON, type) {
     let tempKeys = Object.keys(favJSON);
     for (let i = 0; i < tempKeys.length; i++) {
         if (favJSON[tempKeys[i]] == type) {
-            items.push({ id: tempKeys[i] });
+            items.push({ id: `${tempKeys[i]}` });
         }
     }
 

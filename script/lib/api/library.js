@@ -62,7 +62,9 @@ function receiveAllPlaylists(callback) {
     });
 }
 
-function receiveHistory(callback) {
-    let url = `${HANDLER_LIBRARY}?owner=${owner}&filter=history`;
-    requestGET(url, (response) => callback(response));
+function receiveHistory() {
+    return new Promise(resolve => {
+        let url = `${HANDLER_LIBRARY}?owner=${owner}&filter=history`;
+        requestGET(url, (response) => resolve(response));
+    })
 }

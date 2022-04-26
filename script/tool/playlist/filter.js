@@ -71,7 +71,7 @@ function onClickControlDislikesTracks(playlist) {
         } else if (action.value == 'removeLikes') {
             removeLikeIds(ids, callback);
         } else if (action.value == 'removeFAV') {
-            removeDislikeIds(ids, (trackIds) => removeLikeIds(trackIds, callback));
+            removeFav(ids, callback);
         } else if (action.value == 'removeAllExceptLikes') {
             removeAllExceptLikes(ids, callback);
         }
@@ -139,27 +139,27 @@ async function onClickRemoveHistoryTracks(playlist) {
             return;
         }
 
-        receiveHistory((response) => {
-            if (!response.hasTracks) {
-                fireInfoSwal('В истории прослушиваний нет треков.');
-                return;
-            }
+        receiveHistory()
+            .then(history => {
+                if (!history.hasTracks) {
+                    fireInfoSwal('В истории прослушиваний нет треков.');
+                    return;
+                }
 
-            response.trackIds.length = parseInt(result.value);
-            playlist.tracks = playlist.tracks.filter((track) => {
-                if (!track.id) {
-                    return false;
+                let value = parseInt(result.value);
+                if (history.trackIds.length > value) {
+                    history.trackIds.length = value;
                 }
-                try {
-                    let albumId = track.filename ? '' : track.albums[0].id;
-                    let id = `${track.id}${albumId.length == 0 ? (':' + albumId) : ''}`;
-                    return !response.trackIds.includes(id);
-                } catch (error) {
-                    return false;
-                }
+                let historyIds = history.trackIds.map(id => `${id}`.split(':')[0]);
+                playlist.tracks = playlist.tracks.filter((track) => {
+                    let result = !historyIds.includes(track.id);
+                    if (result && track.id != track.realId) {
+                        return !historyIds.includes(track.realId);
+                    }
+                    return result;
+                });
+                updateTracksWithFilter(playlist);
             });
-            updateTracksWithFilter(playlist);
-        });
     });
 }
 

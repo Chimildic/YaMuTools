@@ -45,6 +45,12 @@ const PLAYLIST = {
         type: 'dislikes',
         handler: collectDislikes,
     },
+    discoveryAlbums: {
+        title: 'Открытия с альбомов',
+        description: 'Послушайте треки с альбомов, где есть ваши лайки',
+        type: 'discoveryAlbums',
+        handler: collectDiscoveryAlbums,
+    },
     discography: {
         title: getMessage('pls_discography_title'),
         description: getMessage('pls_discography_desc'),
@@ -178,6 +184,10 @@ const BASE_MENUS_COLLECTOR_USERMUSIC = [
             {
                 title: getMessage('collector_menu_recom'),
                 handler: swithBetweenMainAndFeed,
+            },
+            {
+                title: PLAYLIST.discoveryAlbums.title,
+                handler: () => collectDiscoveryAlbums(PLAYLIST.discoveryAlbums),
             },
             {
                 title: PLAYLIST.dislikes.title,
@@ -546,7 +556,7 @@ function removeMixTracksFromAlbums() {
 function collectFromHistory(playlist) {
     fireCollectorSwal(playlist.title);
     closeDropdownAll();
-    receiveHistory((response) => {
+    receiveHistory().then(response => {
         if (!response.hasTracks) {
             fireInfoSwal('В истории прослушиваний нет треков.');
             return;
@@ -576,6 +586,30 @@ function collectDislikes(playlist) {
         playlist.trackIds = trackIds;
         patchPlaylistWithRedirect(playlist);
     });
+}
+
+async function collectDiscoveryAlbums(playlist) {
+    fireCollectorSwal(playlist.title);
+    toggleDropdown('usermusicCollectorMain');
+    let likedPlaylist = await receivePlaylistByKind('3')
+    let albumsId = shuffle(likedPlaylist.trackIds)
+        .slice(0, 100)
+        .map(id => `${id}`.split(':')[1])
+        .filter(id => id.length > 0);
+
+    let albums = await receiveAlbumsById(albumsId);
+    let bests = albums.map(a => findBestTrack(a)).flat(1);
+    bests = await removeHistory(bests, 2000);
+    removeFav(bests, (trackIds) => {
+        playlist.trackIds = formatStrIdsToJSON(trackIds.slice(0, 20));
+        patchPlaylistWithRedirect(playlist);
+    })
+
+    function findBestTrack(album) {
+        if (!album.hasOwnProperty('bests') || album.bests.length == 0 || album.error)
+            return [];
+        return `${shuffle(album.bests).slice(0, 1)}`;
+    }
 }
 
 function collectDiscographyOfPeriod(period) {
@@ -696,12 +730,22 @@ function createPlaylistFromLastfmContent(playlist, content) {
 
 //#endregion
 
+async function removeHistory(trackIds, count) {
+    let history = await receiveHistory();
+    history.trackIds.length = count;
+    return trackIds.filter(id => !history.trackIds.includes(id));
+}
+
 function removeLikeIds(trackIds, callback) {
     removeFavoriteTrackIds(trackIds, FAV_TYPE.LIKE, callback);
 }
 
 function removeDislikeIds(trackIds, callback) {
     removeFavoriteTrackIds(trackIds, FAV_TYPE.DISLIKE, callback);
+}
+
+function removeFav(ids, callback) {
+    removeDislikeIds(ids, (trackIds) => removeLikeIds(trackIds, callback));
 }
 
 function removeAllExceptLikes(trackIds, callback) {
@@ -714,7 +758,7 @@ function removeAllExceptLikes(trackIds, callback) {
 function removeFavoriteTrackIds(trackIds, type, callback) {
     receiveFavoriteTrackIds(type, (favoriteIds) => {
         for (let i = 0; i < trackIds.length; i++) {
-            if (searchIdBinary(trackIds[i].id, favoriteIds) != -1) {
+            if (searchIdBinary(trackIds[i].id || trackIds[i], favoriteIds) != -1) {
                 trackIds.splice(i, 1);
                 i--;
             }
