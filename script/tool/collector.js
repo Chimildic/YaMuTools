@@ -765,6 +765,7 @@ async function collectLabel() {
             title: `Альбомы лейбла ${response.label.name}`,
             description: `Собрано альбомов: ${response.albums.length}`,
             trackIds: getTrackIds(response.albums.map(a => a.tracks).flat(1)),
+            type: 'label'
         })
     });
 }
