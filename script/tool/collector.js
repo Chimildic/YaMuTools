@@ -752,7 +752,7 @@ async function collectLabel() {
             compilation: 'Только сборники',
             all: 'Все',
         }
-    }).then((action) => {
+    }).then(async (action) => {
         if (!action.isConfirmed) {
             return;
         }
@@ -761,6 +761,11 @@ async function collectLabel() {
             let validType = action.value == 'both' ? ['album', 'single'] : [action.value];
             response.albums = response.albums.filter(a => (!a.type && validType.includes('album')) || validType.includes(a.type))
         }
+        if (response.albums.length == 0) {
+            fireInfoSwal('Нет альбомов по такому фильтру');
+            return;
+        }
+        await appendTracksToAlbums(response.albums);
         patchPlaylistWithRedirect({
             title: `Альбомы лейбла ${response.label.name}`,
             description: `Собрано альбомов: ${response.albums.length}`,

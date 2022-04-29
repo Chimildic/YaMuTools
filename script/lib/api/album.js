@@ -16,7 +16,6 @@ function receiveLabelAlbumsByLocation(countAlbums) {
         }
 
         albums = albums.flat(1).slice(0, countAlbums);
-        await appendTracksToAlbums(albums);
         resolve({ label: label, albums: albums });
     })
 }
