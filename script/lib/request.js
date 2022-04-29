@@ -1,10 +1,17 @@
 function requestGET(url, callback) {
-    requestOfType({
-        type: 'GET',
-        url: url,
-        formData: null,
-        callback: callback,
-    });
+    return new Promise(resolve => {
+        let data = {
+            type: 'GET',
+            url: url,
+            formData: null,
+        }
+        if (callback) {
+            data.callback = callback;
+        } else {
+            data.callback = resolve;
+        }
+        requestOfType(data);
+    })
 }
 
 function requestPOST(url, formData, callback) {

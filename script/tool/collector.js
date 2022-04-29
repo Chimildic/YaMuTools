@@ -312,32 +312,22 @@ const LASTFM_SIDE_MENUS = [
     },
 ];
 
-const SPOTIFY_MAIN_MENU = {
-    title: 'Spotify',
-    handler: switchBetweenMainAndSpotify,
-};
-
-const SPOTIFY_SIDE_MENUS = [
-    {
-        id: 'spotifyCollectorSide',
-        items: [
-            { header: true, title: 'Spotify', handler: switchBetweenMainAndSpotify },
-            { title: 'Плейлисты', handler: () => collectSpotifyPlaylists() },
-        ],
-    },
-];
-
-function addCollectorOfUserMusic(onLastfmCollector, onSpotifyCollector) {
-    removeCollectorTool();
-    insertDropdown(buildMenuCollectorOfUserMusic(onLastfmCollector, onSpotifyCollector));
+const COLLECTOR_LABEL_BUTTON = {
+    id: 'labelCollector',
+    handler: () => collectLabel(),
+    title: 'Добавить в плейлист',
 }
 
-function buildMenuCollectorOfUserMusic(onLastfmCollector, onSpotifyCollector) {
+function addCollectorOfUserMusic(onLastfmCollector) {
+    removeCollectorTool();
+    insertDropdown(buildMenuCollectorOfUserMusic(onLastfmCollector));
+}
+
+function buildMenuCollectorOfUserMusic(onLastfmCollector) {
     let menus = [];
     menus.push.apply(menus, BASE_MENUS_COLLECTOR_USERMUSIC);
 
     appendModuleMenuIfNeeded(menus, onLastfmCollector, LASTFM_MAIN_MENU, LASTFM_SIDE_MENUS);
-    appendModuleMenuIfNeeded(menus, onSpotifyCollector, SPOTIFY_MAIN_MENU, SPOTIFY_SIDE_MENUS);
 
     COLLECTOR_USERMUSIC_DROPDOWN.menus = menus;
     return COLLECTOR_USERMUSIC_DROPDOWN;
@@ -374,6 +364,10 @@ function addCollectorOfArtist() {
 
 function removeCollectorTool() {
     removeDropdown();
+}
+
+function addCollectorOfLabel() {
+    insertButton(COLLECTOR_LABEL_BUTTON);
 }
 
 function onItemClickNewRelease(playlist) {
@@ -417,11 +411,6 @@ function swithBetweenMainAndFeed() {
 function switchBetweenMainAndLastfm() {
     toggleDropdown('usermusicCollectorMain');
     toggleDropdown('lastfmCollectorSide');
-}
-
-function switchBetweenMainAndSpotify() {
-    toggleDropdown('usermusicCollectorMain');
-    toggleDropdown('spotifyCollectorSide');
 }
 
 function switchBetweenNewAndPeriod() {
@@ -725,6 +714,58 @@ function createPlaylistFromLastfmContent(playlist, content) {
             playlist.trackIds = trackIds;
             patchPlaylistWithRedirect(playlist);
         });
+    });
+}
+
+async function collectLabel() {
+    let response = await Swal.fire({
+        title: 'Коллекция лейбла',
+        input: 'text',
+        text: 'Сколько альбомов объединить в плейлист?',
+        inputValue: 100,
+        showCancelButton: true,
+        cancelButtonText: 'Отмена',
+        inputValidator: (value) => {
+            if (!/^[1-9]\d*$/.test(value)) {
+                return 'Некорректное число';
+            }
+        }
+    }).then(async result => {
+        if (!result.isConfirmed) {
+            return;
+        }
+        fireCollectorSwal('Альбомы лейбла')
+        let value = parseInt(result.value);
+        return await receiveLabelAlbumsByLocation(value);
+    })
+
+    if (!response) {
+        return;
+    }
+
+    fireSelectSwal({
+        title: 'Фильтр по типу',
+        inputOptions: {
+            both: 'Альбомы и синглы',
+            album: 'Только альбомы',
+            single: 'Только синглы',
+            compilation: 'Только сборники',
+            all: 'Все',
+        }
+    }).then((action) => {
+        if (!action.isConfirmed) {
+            return;
+        }
+        fireLoadingSwal('Фильтрация..');
+        if (action.value != 'all') {
+            let validType = action.value == 'both' ? ['album', 'single'] : [action.value];
+            response.albums = response.albums.filter(a => (!a.type && validType.includes('album')) || validType.includes(a.type))
+        }
+        patchPlaylistWithRedirect({
+            title: `Альбомы лейбла ${response.label.name}`,
+            description: `Собрано альбомов: ${response.albums.length}`,
+            trackIds: getTrackIds(response.albums.map(a => a.tracks).flat(1)),
+        })
     });
 }
 

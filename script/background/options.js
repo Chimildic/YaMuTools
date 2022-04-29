@@ -15,7 +15,6 @@ const DEFAULT_OPTIONS = {
     requestLastfmRange: 5,
     actionWithPlaylist: 'newEveryTime',
     createdPlaylists: {},
-    onSpotifyCollector: false,
     showFeedbackAlert: true,
     lastShownFeedbackAlert: 0,
     strDateInstall: new Date().toUTCString(),

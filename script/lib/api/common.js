@@ -7,6 +7,7 @@ const API_TRACK = `${urlAPI}track/`;
 const HANDLER_FEED = `${urlHandler}feed.jsx`;
 const HANDLER_ALBUM = `${urlHandler}album.jsx`;
 const HANDLER_ALBUMS = `${urlHandler}albums.jsx`;
+const HANDLER_LABEL_ITEMS = `${urlHandler}label.jsx`;
 const HANDLER_ARTIST = `${urlHandler}artist.jsx`;
 const HANDLER_LIBRARY = `${urlHandler}library.jsx`;
 const HANDLER_PLAYLIST = `${urlHandler}playlist.jsx`;

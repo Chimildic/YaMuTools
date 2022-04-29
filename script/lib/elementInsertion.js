@@ -6,6 +6,7 @@ const PARENT_CLASS = {
     '.d-generic-page-head__main-side-actions': 'afterbegin',
     '.page-playlist__controls': 'beforeend',
     '.d-generic-page-head__main-actions': 'beforeend',
+    '.page-label__controls': 'beforeend'
 };
 let navTabs, indexNavTabs;
 
