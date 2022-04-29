@@ -24,6 +24,7 @@ const DEFAULT_OPTIONS = {
     similarPlaylistCountTracks: 60,
     similarThreshold: 0.5,
     isFirstInstall: true,
+    canShowSurvey: true,
 };
 
 function patchCurrentOptions(callback) {
