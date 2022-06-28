@@ -6,7 +6,7 @@ function sayHello() {
             fireHelloSwal();
             saveOption('isFirstInstall', false);
         } else if (items.canShowSurvey) {
-            fireSurvey();
+            // fireSurvey();
             saveOption('canShowSurvey', false);
         }
     });
