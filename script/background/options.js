@@ -16,7 +16,7 @@ const DEFAULT_OPTIONS = {
     actionWithPlaylist: 'newEveryTime',
     createdPlaylists: {},
     showFeedbackAlert: true,
-    lastShownFeedbackAlert: 0,
+    strLastDateFeedbackAlert: new Date().toUTCString(),
     strDateInstall: new Date().toUTCString(),
     reassignLoginLastfm: '',
     countCreatedPlaylist: 0,
