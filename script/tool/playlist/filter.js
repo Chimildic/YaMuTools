@@ -60,7 +60,7 @@ function onClickControlDislikesTracks(playlist) {
             removeFAV: 'Удалить оба типа',
             removeAllExceptLikes: 'Оставить только лайки',
         },
-    }).then((action) => {
+    }).then(async (action) => {
         if (!action.isConfirmed) {
             return;
         }
@@ -73,7 +73,7 @@ function onClickControlDislikesTracks(playlist) {
         } else if (action.value == 'removeFAV') {
             removeFav(ids, callback);
         } else if (action.value == 'removeAllExceptLikes') {
-            removeAllExceptLikes(ids, callback);
+            callback(await removeAllExceptLikes(ids));
         }
     });
 

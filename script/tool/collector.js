@@ -260,10 +260,6 @@ const COLLECTOR_ARTIST_DROPDOWN = {
             id: 'artistCollectorMain',
             items: [
                 {
-                    title: PERIOD.DEFAULT.title,
-                    handler: () => collectDiscographyOfPeriod(PERIOD.DEFAULT),
-                },
-                {
                     title: PERIOD.ONE_YEAR.title,
                     handler: () => collectDiscographyOfPeriod(PERIOD.ONE_YEAR),
                 },
@@ -274,6 +270,14 @@ const COLLECTOR_ARTIST_DROPDOWN = {
                 {
                     title: PERIOD.FIVE_YEAR.title,
                     handler: () => collectDiscographyOfPeriod(PERIOD.FIVE_YEAR),
+                },
+                {
+                    title: PERIOD.DEFAULT.title,
+                    handler: () => collectDiscographyOfPeriod(PERIOD.DEFAULT),
+                },
+                {
+                    title: 'Все лайки',
+                    handler: () => collectDiscographyLikes(),
                 },
             ],
         },
@@ -601,20 +605,29 @@ async function collectDiscoveryAlbums(playlist) {
     }
 }
 
-function collectDiscographyOfPeriod(period) {
-    selectedPlaylist = PLAYLIST.discography;
-    selectedPlaylist.period = period;
-    collectDiscography();
+function collectDiscographyLikes() {
+    collectDiscography(PERIOD.DEFAULT, 'likes');
 }
 
-function collectDiscography() {
+function collectDiscographyOfPeriod(period) {
+    collectDiscography(period, 'all');
+}
+
+function collectDiscography(period, type) {
+    selectedPlaylist = PLAYLIST.discography;
+    selectedPlaylist.period = period;
     fireCollectorSwal(selectedPlaylist.title);
     toggleDropdown('artistCollectorMain');
-    receiveAlbumsOfArtist((response) => {
+
+    receiveAlbumsOfArtist(async (response) => {
         selectedPlaylist.albums = response.albums;
         filterAlbumsByPeriod(selectedPlaylist.period);
+        let trackIds = formatAlbumTracksToIds(selectedPlaylist.albums);
+        if (type == 'likes') {
+            trackIds = await removeAllExceptLikes(trackIds);
+        }
         selectedPlaylist.title += ' ' + response.artist.name;
-        selectedPlaylist.trackIds = formatAlbumTracksToIds(selectedPlaylist.albums);
+        selectedPlaylist.trackIds = trackIds
         patchPlaylistWithRedirect(selectedPlaylist);
     });
 }
@@ -795,11 +808,13 @@ function removeFav(ids, callback) {
     removeDislikeIds(ids, (trackIds) => removeLikeIds(trackIds, callback));
 }
 
-function removeAllExceptLikes(trackIds, callback) {
-    receiveFavoriteTrackIds(FAV_TYPE.LIKE, (likeIds) => {
-        let filteredTrackIds = trackIds.filter((item) => likeIds.some((likeTrack) => likeTrack.id == item.id));
-        callback(filteredTrackIds);
-    });
+function removeAllExceptLikes(trackIds) {
+    return new Promise(resolve => {
+        receiveFavoriteTrackIds(FAV_TYPE.LIKE, (likeIds) => {
+            let filteredTrackIds = trackIds.filter((item) => likeIds.some((likeTrack) => likeTrack.id == item.id));
+            resolve(filteredTrackIds);
+        });
+    })
 }
 
 function removeFavoriteTrackIds(trackIds, type, callback) {
