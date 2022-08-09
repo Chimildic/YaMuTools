@@ -1,5 +1,9 @@
-function fireCollectorSwal(title) {
-    fireLoadingSwal(getMessage('info_playlist_creating', [title]));
+async function fireCollectorSwal(title) {
+    if (await Ad.canShowAd()) {
+        Ad.show("плейлист собирается, пожалуйста, подождите")
+    } else { 
+        fireLoadingSwal(getMessage('info_playlist_creating', [title]));
+    }
 }
 
 function fireLikerSwal() {

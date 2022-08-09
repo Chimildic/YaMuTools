@@ -6,13 +6,17 @@ const EXPORTER_MENU_ITEM = {
 
 function onClickExporterTool() {
     toggleDropdown('menuPlaylistMain');
-    receiveTracksFromPlaylist((tracks) => outputTracksWithAlert(tracks));
+    receiveTracksFromPlaylist((tracks) => {
+        outputTracksWithAlert(tracks)
+    });
 }
 
 function outputTracksWithAlert(tracks) {
     copyTracksToClipbloard(tracks).then(() => {
-        Swal.fire({
-            html: '<p>Список треков скопирован в буфер обмена. Перейдите на <a target="_blank" href="https://spotlistr.com/search/textbox">spotlistr</a> или <a target="_blank" href="https://tunemymusic.com">tunemymusic</a> и вставьте его в поле.</p>'
+        Ad.showAdIfCan("треки собираются..").then(() => {
+            Swal.fire({
+                html: '<p>Список треков скопирован в буфер обмена. Перейдите на <a target="_blank" href="https://spotlistr.com/search/textbox">spotlistr</a> или <a target="_blank" href="https://tunemymusic.com">tunemymusic</a> и вставьте его в поле.</p>'
+            })
         })
     }, (e) => {
         console.error(e)

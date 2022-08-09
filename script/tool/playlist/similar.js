@@ -14,6 +14,10 @@ function onClickSimilarPlaylist() {
             collectSimilarTracksLastfm(formatTracksToNamesForLastmSimilar(playlist.tracks), items.similarThreshold, (response) => {
                 shuffle(response);
                 response.length = roundLength(response.length, 250);
+                if (response.length == 0) {
+                    fireInfoSwal("Похожих треков не найдено")
+                    return 
+                }
                 searchTracksByImport(formatLastfmTracksToNames(response), (tracks) => {
                     removeDislikeIds(getTrackIds(tracks), (trackIds) => {
                         removeCopyByIdRecoverSort(trackIds);
