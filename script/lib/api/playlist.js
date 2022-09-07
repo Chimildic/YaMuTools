@@ -196,6 +196,9 @@ function setCover(kind, urlCover, callback) {
     }
 
     requestFileGET(urlCover, (cover) => {
+        if (!cover) {
+            callback()
+        }
         let url = `${HANDLER_UPLOADPIC}?kind=${kind}&sign=${sign}`;
         let formData = new FormData();
         formData.append('file', cover);

@@ -34,8 +34,12 @@ function backgroundRequest(action, url, callback) {
 }
 
 async function requestFileGET(url, callback) {
-    let r = await fetch(url);
-    r.blob().then(content => callback(content));
+    try {
+        let r = await fetch(url);
+        r.blob().then(content => callback(content));
+    } catch (e) {
+        callback()
+    }
 }
 
 function requestFilePOST(url, formData, callback) {
