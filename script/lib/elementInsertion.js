@@ -140,7 +140,8 @@ function addTrackCount() {
             element.insertAdjacentElement('beforeend', span)
         }
         receivePlaylistByLocation((playlist) => {
-            span.innerText = ` - треков: ${playlist.trackCount}`
+            let noRightsCount = playlist.tracks.filter(t => t.error).length
+            span.innerText = `. Треков: ${playlist.trackCount}${noRightsCount > 0 ? `, недоступно: ${noRightsCount}.` : '.'}`
         })
     }
 }
