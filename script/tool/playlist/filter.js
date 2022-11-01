@@ -34,6 +34,10 @@ const FILTER_CONTEXT_MENU = {
         {
             title: 'Вычитание исполнителей',
             handler: () => onClickFilterTool(onClickSubTracksByArtists),
+        },
+        {
+            title: 'Случайная выборка',
+            handler: () => onClickFilterTool(onClickRandomSelect)
         }
     ],
 };
@@ -165,6 +169,35 @@ async function onClickRemoveHistoryTracks(playlist) {
                 updateTracksWithFilter(playlist);
             });
     });
+}
+
+function onClickRandomSelect(playlist) {
+    Swal.fire({
+        title: 'Случайная выборка',
+        input: 'text',
+        text: `Количество треков из ${playlist.trackCount} доступных`,
+        inputValue: 40,
+        showCancelButton: true,
+        cancelButtonText: 'Отмена',
+        inputValidator: (value) => {
+            if (!/^[1-9]\d*$/.test(value)) {
+                return 'Некорректное число';
+            }
+        }
+    }).then(result => {
+        if (!result.isConfirmed) {
+            return;
+        }
+        
+        removeDislikeIds(getTrackIds(playlist.tracks), (trackIds) => {
+            shuffle(trackIds)
+            createPlaylistWithRedirect({
+                title: `Случайная выборка из "${playlist.title}"`,
+                description: '',
+                trackIds: trackIds.slice(0, parseInt(result.value))
+            })
+        })
+    })
 }
 
 function onClickSubTracksByPlaylists(sourcePlaylist) {
