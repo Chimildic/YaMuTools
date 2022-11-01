@@ -613,7 +613,18 @@ function collectDiscographyOfPeriod(period) {
     collectDiscography(period, 'all');
 }
 
-function collectDiscography(period, type) {
+async function collectDiscography(period, type) {
+    let { value: direction } = await Swal.fire({
+        title: 'Сортировка по дате релиза',
+        input: 'radio',
+        inputValue: 'newToOld',
+        inputOptions: {
+            'newToOld': 'От новых к старым',
+            'oldToNew': 'От старых к новым',
+        },
+        returnInputValueOnDeny: true
+    })
+
     selectedPlaylist = PLAYLIST.discography;
     selectedPlaylist.period = period;
     fireCollectorSwal(selectedPlaylist.title);
@@ -622,6 +633,9 @@ function collectDiscography(period, type) {
     receiveAlbumsOfArtist(async (response) => {
         selectedPlaylist.albums = response.albums;
         filterAlbumsByPeriod(selectedPlaylist.period);
+        if (direction == 'oldToNew') {
+            selectedPlaylist.albums.sort((x, y) => new Date(x.releaseDate || '1980') - new Date(y.releaseDate || '1980'))
+        }
         let trackIds = formatAlbumTracksToIds(selectedPlaylist.albums);
         if (type == 'likes') {
             trackIds = await removeAllExceptLikes(trackIds);
