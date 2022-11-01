@@ -106,3 +106,7 @@ function getTrackIds(tracks) {
     }
     return ids;
 }
+
+function getRandomElement(array) {
+    return array[Math.floor(Math.random() * array.length)]
+}

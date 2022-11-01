@@ -1,6 +1,7 @@
 const SIZE = ['700', '800', '900', '1000'];
+
 function getUrlRandomPicture() {
-    let size = SIZE[Math.floor(Math.random() * SIZE.length)];
+    let size = getRandomElement(SIZE)
     return PICSUM_RANDOM_PHOTO.replace('%%', size);
 }
 

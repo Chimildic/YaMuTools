@@ -188,7 +188,7 @@ function onClickRandomSelect(playlist) {
         if (!result.isConfirmed) {
             return;
         }
-        
+        fireHammerSwal()
         removeDislikeIds(getTrackIds(playlist.tracks), (trackIds) => {
             shuffle(trackIds)
             createPlaylistWithRedirect({
