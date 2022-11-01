@@ -128,3 +128,19 @@ function updateIndexOfNavTabs() {
         indexNavTabs[name] = i;
     }
 }
+
+function addTrackCount() {
+    const TRACK_COUNT_ID = 'yamutools_track_count'
+    let element = document.querySelector('.page-playlist__info-wrapper')
+    if (element) {
+        let span = document.querySelector(`#${TRACK_COUNT_ID}`)
+        if (!span) {
+            span = document.createElement('span')
+            span.id = TRACK_COUNT_ID
+            element.insertAdjacentElement('beforeend', span)
+        }
+        receivePlaylistByLocation((playlist) => {
+            span.innerText = ` - треков: ${playlist.trackCount}`
+        })
+    }
+}

@@ -72,9 +72,11 @@ function modifyPlaylistPage(key) {
         return;
     }
 
+    addTrackCount()
+
     chrome.storage.sync.get(['onLikerTool', 'onExporterTool', 'onRandomCover', 'onToolNoDuplicate'], function (items) {
         _ = items.onRandomCover ? addItemRandomCover() : removeItemRandomCover();
-
+        
         addMenuPlaylist({
             onLikerTool: items.onLikerTool,
             onExporterTool: items.onExporterTool,
