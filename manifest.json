@@ -2,7 +2,7 @@
     "name": "__MSG_ext_name__",
     "short_name": "__MSG_ext_short_name__",
     "description": "__MSG_ext_description__",
-    "version": "0.8.6",
+    "version": "0.8.7",
     "manifest_version": 3,
     "author": "Chimildic",
     "default_locale": "ru",
@@ -45,8 +45,6 @@
                 "/script/lib/elementHandler.js",
                 "/script/lib/elementInsertion.js",
 
-
-                "/script/domain/ad.js",
                 "/script/tool/collector.js",
                 "/script/tool/navigation.js",
                 "/script/tool/podcasthater.js",
@@ -70,7 +68,7 @@
     ],
     "web_accessible_resources": [
         {
-            "resources": ["/script/domain/player.js", "/img/free-lesson.png", "/img/check.png"],
+            "resources": ["/script/domain/player.js"],
             "matches": [
                 "https://music.yandex.ru/*",
                 "https://music.yandex.by/*",

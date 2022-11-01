@@ -1,11 +1,7 @@
 const SIZE = ['700', '800', '900', '1000'];
 function getUrlRandomPicture() {
-    let size = getRandomValue(SIZE)
+    let size = SIZE[Math.floor(Math.random() * SIZE.length)];
     return PICSUM_RANDOM_PHOTO.replace('%%', size);
-}
-
-function getRandomValue(array){
-    return array[Math.floor(Math.random() * array.length)]
 }
 
 function receivePlaylistByLocation(callback) {
@@ -277,7 +273,7 @@ function createFormDataForInsertTracks(args) {
 }
 
 function redirectToPlaylist(kind) {
-    Ad.continueAfterAd(() => location.href = `https://music.yandex.${domain}/users/${owner}/playlists/${kind}`)
+    location.href = `https://music.yandex.${domain}/users/${owner}/playlists/${kind}`;
 }
 
 function incrementCreatedPlalist() {

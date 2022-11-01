@@ -18,7 +18,6 @@ const DEFAULT_OPTIONS = {
     showFeedbackAlert: true,
     strLastDateFeedbackAlert: new Date().toUTCString(),
     strDateInstall: new Date().toUTCString(),
-    strLastDateAd: new Date('2000').toUTCString(),
     reassignLoginLastfm: '',
     countCreatedPlaylist: 0,
     openChangelogWithUpdate: false,
