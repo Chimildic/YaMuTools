@@ -73,13 +73,13 @@ function modifyPlaylistPage(key) {
     }
 
     chrome.storage.sync.get(['onLikerTool', 'onExporterTool', 'onRandomCover', 'onToolNoDuplicate'], function (items) {
-        // _ = items.onRandomCover ? addItemRandomCover() : removeItemRandomCover();
+        _ = items.onRandomCover ? addItemRandomCover() : removeItemRandomCover();
 
         addMenuPlaylist({
             onLikerTool: items.onLikerTool,
             onExporterTool: items.onExporterTool,
             onToolNoDuplicate: items.onToolNoDuplicate,
-            // onRandomCover: items.onRandomCover,
+            onRandomCover: items.onRandomCover,
         });
     });
 }
