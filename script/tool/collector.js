@@ -614,7 +614,7 @@ function collectDiscographyOfPeriod(period) {
 }
 
 async function collectDiscography(period, type) {
-    let { value: direction } = await Swal.fire({
+    Swal.fire({
         title: 'Сортировка по дате релиза',
         input: 'radio',
         inputValue: 'newToOld',
@@ -623,27 +623,31 @@ async function collectDiscography(period, type) {
             'oldToNew': 'От старых к новым',
         },
         returnInputValueOnDeny: true
+    }).then(result => {
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        selectedPlaylist = PLAYLIST.discography;
+        selectedPlaylist.period = period;
+        fireCollectorSwal(selectedPlaylist.title);
+        toggleDropdown('artistCollectorMain');
+
+        receiveAlbumsOfArtist(async (response) => {
+            selectedPlaylist.albums = response.albums;
+            filterAlbumsByPeriod(selectedPlaylist.period);
+            if (result.value == 'oldToNew') {
+                selectedPlaylist.albums.sort((x, y) => new Date(x.releaseDate || '1980') - new Date(y.releaseDate || '1980'))
+            }
+            let trackIds = formatAlbumTracksToIds(selectedPlaylist.albums);
+            if (type == 'likes') {
+                trackIds = await removeAllExceptLikes(trackIds);
+            }
+            selectedPlaylist.title += ' ' + response.artist.name;
+            selectedPlaylist.trackIds = trackIds
+            patchPlaylistWithRedirect(selectedPlaylist);
+        })
     })
-
-    selectedPlaylist = PLAYLIST.discography;
-    selectedPlaylist.period = period;
-    fireCollectorSwal(selectedPlaylist.title);
-    toggleDropdown('artistCollectorMain');
-
-    receiveAlbumsOfArtist(async (response) => {
-        selectedPlaylist.albums = response.albums;
-        filterAlbumsByPeriod(selectedPlaylist.period);
-        if (direction == 'oldToNew') {
-            selectedPlaylist.albums.sort((x, y) => new Date(x.releaseDate || '1980') - new Date(y.releaseDate || '1980'))
-        }
-        let trackIds = formatAlbumTracksToIds(selectedPlaylist.albums);
-        if (type == 'likes') {
-            trackIds = await removeAllExceptLikes(trackIds);
-        }
-        selectedPlaylist.title += ' ' + response.artist.name;
-        selectedPlaylist.trackIds = trackIds
-        patchPlaylistWithRedirect(selectedPlaylist);
-    });
 }
 
 function collectNewReleases() {
@@ -800,6 +804,21 @@ async function collectLabel() {
             type: 'label'
         })
     });
+}
+
+function collectNoRightsTracks() {
+    receiveAllPlaylists(async playlists => {
+        let tracks = (await Promise.all(
+            playlists.map(async p => (await receivePlaylistByKind(p.kind)).tracks)
+        ))
+            .flat()
+            .filter(t => t.error)
+        patchPlaylistWithRedirect({
+            title: 'Недоступные треки',
+            description: 'Собрано со всех личных плейлистов',
+            trackIds: getTrackIds(tracks)
+        })
+    })
 }
 
 //#endregion

@@ -14,6 +14,10 @@ const FILTER_CONTEXT_MENU = {
         {
             title: 'Управление ремиксами',
             handler: () => onClickFilterTool(onClickControlMixTracks),
+        }, 
+        {
+            title: 'Управление недоступными',
+            handler: () => onClickFilterTool(onClickNoRightsTracks)
         },
         {
             title: 'Удалить недавно игравшие',
@@ -304,6 +308,31 @@ function match(items, strRegex, invert = false) {
         }
         return invert ^ (regex.test(item.title.formatName()) || albumCheck || versionCheck);
     });
+}
+
+function onClickNoRightsTracks(sourcePlaylist) {
+    Swal.fire({
+        title: 'Выберите действие',
+        input: 'radio',
+        inputValue: 'remove',
+        inputOptions: {
+            'remove': 'Удалить недоступные треки в текущем плейлисте',
+            'collect': 'Собрать недоступные треки со всех плейлистов (без удаления)',
+        },
+        returnInputValueOnDeny: true
+    }).then(result => {
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        fireCollectorSwal()
+        if (result.value == 'remove') {
+            sourcePlaylist.tracks = sourcePlaylist.tracks.filter(t => !t.error)
+            updateTracksWithFilter(sourcePlaylist)
+        } else if (result.value == 'collect') {
+            collectNoRightsTracks()
+        }
+    })
 }
 
 String.prototype.formatName = function () {
