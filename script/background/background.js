@@ -23,12 +23,12 @@ function onContentMessage(message, sender, sendResponse) {
 }
 
 function onTabsUpdated(tabId, changeInfo, tab) {
-    if (tab.status == 'complete') {
+    if (changeInfo && changeInfo.status == 'complete') {
         chrome.tabs.sendMessage(tabId, { status: tab.status }, (response) => {
             if (!chrome.runtime.lastError) {
                 // https://stackoverflow.com/a/69587523/5894542
             }
-        });
+        })
     }
 }
 
