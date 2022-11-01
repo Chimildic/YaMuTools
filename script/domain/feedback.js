@@ -18,27 +18,23 @@ function canFireFeedback(strLastDateFeedbackAlert, strDateInstall) {
     let dateInstall = new Date(strDateInstall);
     let diffBetweenInstall = diffDateByDays(today, dateInstall);
 
-    return diffBetweenInstall > 16 && diffBetweenFeedbackAlert > 16;
+    return diffBetweenInstall > 10 && diffBetweenFeedbackAlert > 10;
 }
 
 function fireFeedbackSwal() {
     Swal.fire({
-        title: 'Оцените расширение YaMuTools',
+        title: 'Спасибо за использование YaMuTools',
+        html: 'Вы можете <a href="https://chrome.google.com/webstore/detail/dgjneghdfaeajjemeklgmbojeeplehah" target="_blank">оставить отзыв</a> или <a href="https://qiwi.com/n/CHIMILDIC" target="_blank">отправить донат</a>, чтобы текущие функции работали стабильно, а новые появлялись чаще',
         input: 'checkbox',
         showCloseButton: true,
-        showConfirmButton: true,
+        showConfirmButton: false,
         showDenyButton: true,
         focusConfirm: true,
         inputPlaceholder: 'Больше не напоминать',
-        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Оставить отзыв',
-        confirmButtonColor: '#3085d6',
         denyButtonText: 'Закрыть',
         denyButtonColor: '#d33',
         returnInputValueOnDeny: true,
     }).then((action) => {
-        if (action.isConfirmed) {
-            openWebStorePage();
-        }
         if (action.isConfirmed || action.value == 1) {
             setDontShowFeedbackAlert();
         }
