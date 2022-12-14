@@ -12,7 +12,7 @@ function fireCollectorSwal(title) {
     fireHammerSwal()
 }
 
-function fireLikerSwal() {
+function fireWaitingServerSwal() {
     fireInfoSwal(getMessage('info_server_waiting'));
 }
 

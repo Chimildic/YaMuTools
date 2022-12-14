@@ -33,7 +33,7 @@ function switchMainAndLikerContext() {
 
 function onClickLikerOfTracks(args) {
     toggleDropdown('likerMain');
-    fireLikerSwal();
+    fireWaitingServerSwal();
     receiveTracksFromPlaylist((tracks) => markTracks(tracks, args));
 }
 

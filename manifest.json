@@ -2,11 +2,11 @@
     "name": "__MSG_ext_name__",
     "short_name": "__MSG_ext_short_name__",
     "description": "__MSG_ext_description__",
-    "version": "0.8.7",
+    "version": "0.8.8",
     "manifest_version": 3,
     "author": "Chimildic",
     "default_locale": "ru",
-    "host_permissions": ["https://avatars.yandex.net/*", "https://picsum.photos/*", "https://www.last.fm/*"],
+    "host_permissions": ["https://avatars.yandex.net/*", "https://picsum.photos/*", "https://www.last.fm/*", "https://api.music.yandex.net/*"],
     "permissions": ["storage"],
     "content_scripts": [
         {
@@ -49,6 +49,7 @@
                 "/script/tool/navigation.js",
                 "/script/tool/podcasthater.js",
                 "/script/tool/playlist/liker.js",
+                "/script/tool/playlist/ugc.js",
                 "/script/tool/playlist/exporter.js",
                 "/script/tool/playlist/noduplicates.js",
                 "/script/tool/playlist/similar.js",

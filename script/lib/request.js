@@ -5,24 +5,22 @@ function requestGET(url, callback) {
             url: url,
             formData: null,
         }
-        if (callback) {
-            data.callback = callback;
-        } else {
-            data.callback = resolve;
-        }
+        data.callback = callback ? callback : resolve
         requestOfType(data);
     })
 }
 
 function requestPOST(url, formData, callback) {
-    refreshSign(() =>
-        requestOfType({
+    return new Promise(resolve => {
+        let data = {
             type: 'POST',
             url: url,
             formData: formData,
             callback: callback,
-        })
-    );
+        }
+        data.callback = callback ? callback : resolve
+        refreshSign(() => requestOfType(data))
+    })
 }
 
 function backgroundGET(url, callback) {

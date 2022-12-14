@@ -16,6 +16,7 @@ const HANDLER_PLAYLIST_PATCH = `${urlHandler}playlist-patch.jsx`;
 const HANDLER_CHANGE_PLAYLIST = `${urlHandler}change-playlist.jsx`;
 const HANDLER_IMPORT = `${urlHandler}import.jsx`;
 const HANDLER_UPLOADPIC = `${urlHandler}upload-pic.jsx`;
+const HANDLER_TRACK_ENTRIES = `${urlHandler}track-entries.jsx`;
 
 const LASTFM_API_KEY = 'ac0116882cc3fd3a25ed49908725ce99';
 const LASTFM_API_BASE = `https://ws.audioscrobbler.com/2.0/?api_key=${LASTFM_API_KEY}&format=json`;
