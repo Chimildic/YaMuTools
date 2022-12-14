@@ -63,6 +63,7 @@
 
                 "/script/domain/content.js",
                 "/script/domain/feedback.js",
+                "/script/domain/android.js",
                 "/script/domain/first-install.js"
             ]
         }

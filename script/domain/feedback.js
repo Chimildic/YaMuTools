@@ -10,15 +10,8 @@ function remindToWriteFeedback() {
 }
 
 function canFireFeedback(strLastDateFeedbackAlert, strDateInstall) {
-    let today = new Date();
-
-    let lastDateFeedback = new Date(strLastDateFeedbackAlert);
-    let diffBetweenFeedbackAlert = diffDateByDays(today, lastDateFeedback);
-
-    let dateInstall = new Date(strDateInstall);
-    let diffBetweenInstall = diffDateByDays(today, dateInstall);
-
-    return diffBetweenInstall > 10 && diffBetweenFeedbackAlert > 10;
+    let [diffBetweenFeedbackAlert, diffBetweenInstall] = getDiffDays(strLastDateFeedbackAlert, strDateInstall)
+    return diffBetweenInstall > 7 && diffBetweenFeedbackAlert > 10;
 }
 
 function fireFeedbackSwal() {
@@ -51,4 +44,16 @@ function setLastDateFeedbackAlert() {
 
 function setDontShowFeedbackAlert() {
     saveOption('showFeedbackAlert', false);
+}
+
+function getDiffDays(strLastDate, strDateInstall) {
+    let today = new Date();
+
+    let lastDate = new Date(strLastDate);
+    let diffBetweenAlert = diffDateByDays(today, lastDate);
+
+    let dateInstall = new Date(strDateInstall);
+    let diffBetweenInstall = diffDateByDays(today, dateInstall);
+
+    return [diffBetweenAlert, diffBetweenInstall]
 }

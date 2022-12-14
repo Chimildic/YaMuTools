@@ -25,6 +25,9 @@ const DEFAULT_OPTIONS = {
     similarThreshold: 0.5,
     isFirstInstall: true,
     canShowSurvey: true,
+    
+    canShowAndroidAlert: true,
+    strLastDateAndroidAlert: "",
 };
 
 function patchCurrentOptions(callback) {
