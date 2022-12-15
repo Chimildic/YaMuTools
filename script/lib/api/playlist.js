@@ -182,6 +182,9 @@ function saveMetaOfCreatedPlaylist(data) {
 }
 
 function changeDescription(data, callback) {
+    if (data.description == undefined || data.description == "") {
+        data.description = " " // из-за бага яндекса, пустое описание не принимается
+    }
     let formData = `action=change-description&kind=${data.kind}&description=${data.description}&sign=${sign}`;
     requestPOST(HANDLER_CHANGE_PLAYLIST, formData, callback);
 }
