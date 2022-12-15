@@ -1,7 +1,7 @@
 # YaMuTools
 Расширение добавляет новые возможности на сайт Яндекс.Музыки
 
-Доступно в [Google Web Store](https://chrome.google.com/webstore/detail/dgjneghdfaeajjemeklgmbojeeplehah) и [Firefox Addons](https://addons.mozilla.org/ru/firefox/addon/yamutools)
+Доступно в [Google Web Store](https://chrome.google.com/webstore/detail/dgjneghdfaeajjemeklgmbojeeplehah) и [Firefox Addons](https://addons.mozilla.org/ru/firefox/addon/yamutools), а также на [андроид](https://boosty.to/chimildic/posts/83160062-b575-40aa-af3f-764d192b5930).
 
 ## Возможности
 - Создает много персонализированных плейлистов, в том числе на основе Last.fm
