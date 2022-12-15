@@ -1,6 +1,7 @@
 const SIZE = ['700', '800', '900', '1000'];
+
 function getUrlRandomPicture() {
-    let size = SIZE[Math.floor(Math.random() * SIZE.length)];
+    let size = getRandomElement(SIZE)
     return PICSUM_RANDOM_PHOTO.replace('%%', size);
 }
 
@@ -181,6 +182,9 @@ function saveMetaOfCreatedPlaylist(data) {
 }
 
 function changeDescription(data, callback) {
+    if (data.description == undefined || data.description == "") {
+        data.description = " " // из-за бага яндекса, пустое описание не принимается
+    }
     let formData = `action=change-description&kind=${data.kind}&description=${data.description}&sign=${sign}`;
     requestPOST(HANDLER_CHANGE_PLAYLIST, formData, callback);
 }
@@ -192,6 +196,9 @@ function setCover(kind, urlCover, callback) {
     }
 
     backgroundFileGET(urlCover, (cover) => {
+        if (!cover) {
+            callback()
+        }
         let url = `${HANDLER_UPLOADPIC}?kind=${kind}&sign=${sign}`;
         let formData = new FormData();
         formData.append('file', cover);

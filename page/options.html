@@ -26,6 +26,14 @@
             <a class="button" target="_blank" href="https://github.com/Chimildic/YaMuTools/discussions">Обратная связь</a>
             <p id="author">Chimildic, 2021</p>
         </footer>
+
+        <footer class="item-col" style="display: flex; flex-direction: row; justify-content: space-around; align-items: center; margin-top: 30px;">
+            <a style="text-decoration: none; display: flex; flex-direction: row; align-items: center;" target="_blank" href="https://boosty.to/chimildic/posts/83160062-b575-40aa-af3f-764d192b5930">
+                <img style="margin-right: 20px;" width="15%" src="/icon/android-logo.png"></img>
+                <p>Скачать приложение</p>
+            </a>
+            <iframe src="https://yoomoney.ru/quickpay/fundraise/button?billNumber=v0XM0QOE1BQ.221214&" width="240" height="50" frameborder="0" allowtransparency="true" scrolling="no"></iframe>​
+        </footer>
         <section class="bubble">
             <h3>Моя музыка</h3>
             <hr />
@@ -97,16 +105,6 @@
                 </table>
             </label>
         </section>
-        <footer id="donateSection" class="item-col" style="display: none">
-            <iframe
-                src="https://yoomoney.ru/quickpay/shop-widget?writer=seller&targets=%D0%9F%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%B0%D1%82%D1%8C%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%20YaMuTools&targets-hint=&default-sum=500&button-text=11&payment-type-choice=on&mobile-payment-type-choice=on&comment=on&hint=&successURL=&quickpay=shop&account=410014208620686"
-                width="100%"
-                height="220"
-                frameborder="0"
-                allowtransparency="true"
-                scrolling="no"
-            ></iframe>
-        </footer>
         <section class="bubble">
             <h3>Плейлист</h3>
             <hr />
@@ -225,17 +223,17 @@
                 </div>
             </label>
             <label class="item">
+                <input type="checkbox" id="canShowAndroidAlert" />
+                <div class="item-text">
+                    <p class="item__title">Андроид приложение</p>
+                    <p class="item__desc">Периодическое напоминание о приложении.</p>
+                </div>
+            </label>
+            <label class="item">
                 <input type="checkbox" id="openChangelogWithUpdate" />
                 <div class="item-text">
                     <p class="item__title">Уведомление при обновлении</p>
                     <p class="item__desc">После обновления расширения откроется вкладка со списком изменений.</p>
-                </div>
-            </label>
-            <label class="item" id="checkboxDonateSection" style="display: none">
-                <input type="checkbox" id="onDonateSection" />
-                <div class="item-text">
-                    <p class="item__title">Показать блок поддержки</p>
-                    <p class="item__desc">При отключении убирает форму ЮMoney с этой страницы.</p>
                 </div>
             </label>
         </section>

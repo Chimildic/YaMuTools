@@ -1,8 +1,18 @@
+const GIFS = [
+    'https://media.giphy.com/media/dGUULYPrB0SQsbXrEx/giphy.gif',
+    'https://media.giphy.com/media/pOZhmE42D1WrCWATLK/giphy.gif',
+    'https://media.giphy.com/media/Y1jRz3dWxnxamSyISA/giphy.gif',
+    'https://media.giphy.com/media/dasJZ7haCEapEH9KDr/giphy.gif',
+    'https://media.giphy.com/media/9AIYt5rZ1cQVdwjFPd/giphy.gif',
+    'https://media.giphy.com/media/MAjK6dUDas2gKYQdhT/giphy.gif'
+]
+
 function fireCollectorSwal(title) {
-    fireLoadingSwal(getMessage('info_playlist_creating', [title]));
+    // fireLoadingSwal(getMessage('info_playlist_creating', [title]));
+    fireHammerSwal()
 }
 
-function fireLikerSwal() {
+function fireWaitingServerSwal() {
     fireInfoSwal(getMessage('info_server_waiting'));
 }
 
@@ -19,6 +29,14 @@ function fireDrawingSwal(text, title) {
         title: title,
         text: text,
         imageUrl: 'https://media.giphy.com/media/WQId4twEIvSyOlu3fm/giphy.gif',
+    });
+}
+
+function fireHammerSwal(text, title) {
+    fireGifSwal({
+        title: title,
+        text: text,
+        imageUrl: getRandomElement(GIFS),
     });
 }
 

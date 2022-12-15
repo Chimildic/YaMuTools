@@ -15,9 +15,8 @@ const DEFAULT_OPTIONS = {
     requestLastfmRange: 5,
     actionWithPlaylist: 'newEveryTime',
     createdPlaylists: {},
-    onSpotifyCollector: false,
     showFeedbackAlert: true,
-    lastShownFeedbackAlert: 0,
+    strLastDateFeedbackAlert: new Date().toUTCString(),
     strDateInstall: new Date().toUTCString(),
     reassignLoginLastfm: '',
     countCreatedPlaylist: 0,
@@ -25,6 +24,10 @@ const DEFAULT_OPTIONS = {
     similarPlaylistCountTracks: 60,
     similarThreshold: 0.5,
     isFirstInstall: true,
+    canShowSurvey: true,
+    
+    canShowAndroidAlert: true,
+    strLastDateAndroidAlert: "",
 };
 
 function patchCurrentOptions(callback) {

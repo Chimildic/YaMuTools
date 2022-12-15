@@ -34,6 +34,7 @@ function createButton(data) {
     button.addEventListener('click', data.handler);
 
     let span = document.createElement('span');
+    span.style.cssText = 'margin-left: 0.5rem; margin-right: 0.5rem;'
     span.append(button);
 
     return span;

@@ -260,10 +260,6 @@ const COLLECTOR_ARTIST_DROPDOWN = {
             id: 'artistCollectorMain',
             items: [
                 {
-                    title: PERIOD.DEFAULT.title,
-                    handler: () => collectDiscographyOfPeriod(PERIOD.DEFAULT),
-                },
-                {
                     title: PERIOD.ONE_YEAR.title,
                     handler: () => collectDiscographyOfPeriod(PERIOD.ONE_YEAR),
                 },
@@ -274,6 +270,14 @@ const COLLECTOR_ARTIST_DROPDOWN = {
                 {
                     title: PERIOD.FIVE_YEAR.title,
                     handler: () => collectDiscographyOfPeriod(PERIOD.FIVE_YEAR),
+                },
+                {
+                    title: PERIOD.DEFAULT.title,
+                    handler: () => collectDiscographyOfPeriod(PERIOD.DEFAULT),
+                },
+                {
+                    title: 'Все лайки',
+                    handler: () => collectDiscographyLikes(),
                 },
             ],
         },
@@ -312,32 +316,22 @@ const LASTFM_SIDE_MENUS = [
     },
 ];
 
-const SPOTIFY_MAIN_MENU = {
-    title: 'Spotify',
-    handler: switchBetweenMainAndSpotify,
-};
-
-const SPOTIFY_SIDE_MENUS = [
-    {
-        id: 'spotifyCollectorSide',
-        items: [
-            { header: true, title: 'Spotify', handler: switchBetweenMainAndSpotify },
-            { title: 'Плейлисты', handler: () => collectSpotifyPlaylists() },
-        ],
-    },
-];
-
-function addCollectorOfUserMusic(onLastfmCollector, onSpotifyCollector) {
-    removeCollectorTool();
-    insertDropdown(buildMenuCollectorOfUserMusic(onLastfmCollector, onSpotifyCollector));
+const COLLECTOR_LABEL_BUTTON = {
+    id: 'labelCollector',
+    handler: () => collectLabel(),
+    title: 'Добавить в плейлист',
 }
 
-function buildMenuCollectorOfUserMusic(onLastfmCollector, onSpotifyCollector) {
+function addCollectorOfUserMusic(onLastfmCollector) {
+    removeCollectorTool();
+    insertDropdown(buildMenuCollectorOfUserMusic(onLastfmCollector));
+}
+
+function buildMenuCollectorOfUserMusic(onLastfmCollector) {
     let menus = [];
     menus.push.apply(menus, BASE_MENUS_COLLECTOR_USERMUSIC);
 
     appendModuleMenuIfNeeded(menus, onLastfmCollector, LASTFM_MAIN_MENU, LASTFM_SIDE_MENUS);
-    appendModuleMenuIfNeeded(menus, onSpotifyCollector, SPOTIFY_MAIN_MENU, SPOTIFY_SIDE_MENUS);
 
     COLLECTOR_USERMUSIC_DROPDOWN.menus = menus;
     return COLLECTOR_USERMUSIC_DROPDOWN;
@@ -374,6 +368,10 @@ function addCollectorOfArtist() {
 
 function removeCollectorTool() {
     removeDropdown();
+}
+
+function addCollectorOfLabel() {
+    insertButton(COLLECTOR_LABEL_BUTTON);
 }
 
 function onItemClickNewRelease(playlist) {
@@ -417,11 +415,6 @@ function swithBetweenMainAndFeed() {
 function switchBetweenMainAndLastfm() {
     toggleDropdown('usermusicCollectorMain');
     toggleDropdown('lastfmCollectorSide');
-}
-
-function switchBetweenMainAndSpotify() {
-    toggleDropdown('usermusicCollectorMain');
-    toggleDropdown('spotifyCollectorSide');
 }
 
 function switchBetweenNewAndPeriod() {
@@ -612,22 +605,49 @@ async function collectDiscoveryAlbums(playlist) {
     }
 }
 
-function collectDiscographyOfPeriod(period) {
-    selectedPlaylist = PLAYLIST.discography;
-    selectedPlaylist.period = period;
-    collectDiscography();
+function collectDiscographyLikes() {
+    collectDiscography(PERIOD.DEFAULT, 'likes');
 }
 
-function collectDiscography() {
-    fireCollectorSwal(selectedPlaylist.title);
-    toggleDropdown('artistCollectorMain');
-    receiveAlbumsOfArtist((response) => {
-        selectedPlaylist.albums = response.albums;
-        filterAlbumsByPeriod(selectedPlaylist.period);
-        selectedPlaylist.title += ' ' + response.artist.name;
-        selectedPlaylist.trackIds = formatAlbumTracksToIds(selectedPlaylist.albums);
-        patchPlaylistWithRedirect(selectedPlaylist);
-    });
+function collectDiscographyOfPeriod(period) {
+    collectDiscography(period, 'all');
+}
+
+async function collectDiscography(period, type) {
+    Swal.fire({
+        title: 'Сортировка по дате релиза',
+        input: 'radio',
+        inputValue: 'newToOld',
+        inputOptions: {
+            'newToOld': 'От новых к старым',
+            'oldToNew': 'От старых к новым',
+        },
+        returnInputValueOnDeny: true
+    }).then(result => {
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        selectedPlaylist = PLAYLIST.discography;
+        selectedPlaylist.period = period;
+        fireCollectorSwal(selectedPlaylist.title);
+        toggleDropdown('artistCollectorMain');
+
+        receiveAlbumsOfArtist(async (response) => {
+            selectedPlaylist.albums = response.albums;
+            filterAlbumsByPeriod(selectedPlaylist.period);
+            if (result.value == 'oldToNew') {
+                selectedPlaylist.albums.sort((x, y) => new Date(x.releaseDate || '1980') - new Date(y.releaseDate || '1980'))
+            }
+            let trackIds = formatAlbumTracksToIds(selectedPlaylist.albums);
+            if (type == 'likes') {
+                trackIds = await removeAllExceptLikes(trackIds);
+            }
+            selectedPlaylist.title += ' ' + response.artist.name;
+            selectedPlaylist.trackIds = trackIds
+            patchPlaylistWithRedirect(selectedPlaylist);
+        })
+    })
 }
 
 function collectNewReleases() {
@@ -728,6 +748,79 @@ function createPlaylistFromLastfmContent(playlist, content) {
     });
 }
 
+async function collectLabel() {
+    let response = await Swal.fire({
+        title: 'Коллекция лейбла',
+        input: 'text',
+        text: 'Сколько альбомов объединить в плейлист?',
+        inputValue: 100,
+        showCancelButton: true,
+        cancelButtonText: 'Отмена',
+        inputValidator: (value) => {
+            if (!/^[1-9]\d*$/.test(value)) {
+                return 'Некорректное число';
+            }
+        }
+    }).then(async result => {
+        if (!result.isConfirmed) {
+            return;
+        }
+        fireCollectorSwal('Альбомы лейбла')
+        let value = parseInt(result.value);
+        return await receiveLabelAlbumsByLocation(value);
+    })
+
+    if (!response) {
+        return;
+    }
+
+    fireSelectSwal({
+        title: 'Фильтр по типу',
+        inputOptions: {
+            both: 'Альбомы и синглы',
+            album: 'Только альбомы',
+            single: 'Только синглы',
+            compilation: 'Только сборники',
+            all: 'Все',
+        }
+    }).then(async (action) => {
+        if (!action.isConfirmed) {
+            return;
+        }
+        fireLoadingSwal('Фильтрация..');
+        if (action.value != 'all') {
+            let validType = action.value == 'both' ? ['album', 'single'] : [action.value];
+            response.albums = response.albums.filter(a => (!a.type && validType.includes('album')) || validType.includes(a.type))
+        }
+        if (response.albums.length == 0) {
+            fireInfoSwal('Нет альбомов по такому фильтру');
+            return;
+        }
+        await appendTracksToAlbums(response.albums);
+        patchPlaylistWithRedirect({
+            title: `Альбомы лейбла ${response.label.name}`,
+            description: `Собрано альбомов: ${response.albums.length}`,
+            trackIds: getTrackIds(response.albums.map(a => a.tracks).flat(1)),
+            type: 'label'
+        })
+    });
+}
+
+function collectNoRightsTracks() {
+    receiveAllPlaylists(async playlists => {
+        let tracks = (await Promise.all(
+            playlists.map(async p => (await receivePlaylistByKind(p.kind)).tracks)
+        ))
+            .flat()
+            .filter(t => t.error)
+        patchPlaylistWithRedirect({
+            title: 'Недоступные треки',
+            description: 'Собрано со всех личных плейлистов',
+            trackIds: getTrackIds(tracks)
+        })
+    })
+}
+
 //#endregion
 
 async function removeHistory(trackIds, count) {
@@ -748,11 +841,13 @@ function removeFav(ids, callback) {
     removeDislikeIds(ids, (trackIds) => removeLikeIds(trackIds, callback));
 }
 
-function removeAllExceptLikes(trackIds, callback) {
-    receiveFavoriteTrackIds(FAV_TYPE.LIKE, (likeIds) => {
-        let filteredTrackIds = trackIds.filter((item) => likeIds.some((likeTrack) => likeTrack.id == item.id));
-        callback(filteredTrackIds);
-    });
+function removeAllExceptLikes(trackIds) {
+    return new Promise(resolve => {
+        receiveFavoriteTrackIds(FAV_TYPE.LIKE, (likeIds) => {
+            let filteredTrackIds = trackIds.filter((item) => likeIds.some((likeTrack) => likeTrack.id == item.id));
+            resolve(filteredTrackIds);
+        });
+    })
 }
 
 function removeFavoriteTrackIds(trackIds, type, callback) {

@@ -46,6 +46,9 @@ function buildMenuPlaylist(args) {
     if (args.onLikerTool) {
         menus[0].items.push(LIKER_MENU_ITEM);
         menus.push(LIKER_CONTEXT_MENU);
+
+        menus[0].items.push(UGC_VISIBILITY_MENU_ITEM)
+        menus.push(UGC_CONTEXT_MENU)
     }
 
     if (args.onExporterTool) {

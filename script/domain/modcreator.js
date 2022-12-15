@@ -5,6 +5,7 @@ const PAGE_USERMUSIC_PLAYLISTS = '.page-users__playlists';
 const PAGE_USERMUSIC_TRACKS = '.page-users__tracks';
 const PAGE_USERMUSIC_ALBUMS = '.page-users__albums';
 const PAGE_USERMUSIC_ARTISTS = '.page-users__artists';
+const PAGE_LABEL = '.page-label__controls';
 
 function getAvailableModify() {
     let key, method;
@@ -21,6 +22,9 @@ function getAvailableModify() {
         } else if (pathname[3] == 'albums') {
             key = PAGE_USERMUSIC_ALBUMS;
         }
+    } else if (pathname[1] == 'label') {
+        key = PAGE_LABEL;
+        method = modifyLabelPage;
     } else if (pathname.length == 5 && pathname[3] == 'playlists') {
         key = PAGE_PLAYLIST;
         method = modifyPlaylistPage;
@@ -59,8 +63,8 @@ function modifyTeaserPlaylist() {
 }
 
 function modifyUserMusicPage(key) {
-    browser.storage.local.get(['onCollectorTool', 'onLastfmCollector', 'onSpotifyCollector'], function (items) {
-        _ = items.onCollectorTool && key == PAGE_USERMUSIC_PLAYLISTS && isOwnerPage() ? addCollectorOfUserMusic(items.onLastfmCollector, items.onSpotifyCollector) : removeCollectorTool();
+    browser.storage.local.get(['onCollectorTool', 'onLastfmCollector'], function (items) {
+        _ = items.onCollectorTool && key == PAGE_USERMUSIC_PLAYLISTS && isOwnerPage() ? addCollectorOfUserMusic(items.onLastfmCollector) : removeCollectorTool();
     });
 }
 
@@ -69,9 +73,11 @@ function modifyPlaylistPage(key) {
         return;
     }
 
+    addTrackCount()
+
     browser.storage.local.get(['onLikerTool', 'onExporterTool', 'onRandomCover', 'onToolNoDuplicate'], function (items) {
         _ = items.onRandomCover ? addItemRandomCover() : removeItemRandomCover();
-
+        
         addMenuPlaylist({
             onLikerTool: items.onLikerTool,
             onExporterTool: items.onExporterTool,
@@ -93,4 +99,10 @@ function modifyPodcastElements() {
             removePodcastElements();
         }
     });
+}
+
+function modifyLabelPage(key){
+    if (key == PAGE_LABEL) {
+        addCollectorOfLabel()
+    }
 }

@@ -9,33 +9,26 @@ function remindToWriteFeedback(){
     });
 }
 
-function canFireFeedback(lastDayShown, strDateInstall){  
-    let today = new Date();
-    let dayOfMonth = today.getDate();
-    let dateInstall = new Date(Date.parse(strDateInstall));
-    let diffBetweenDate = diffDateByDays(today, dateInstall);
-
-    return diffBetweenDate > 1 && dayOfMonth - lastDayShown > 1;
+function canFireFeedback(strLastDateFeedbackAlert, strDateInstall) {
+    let [diffBetweenFeedbackAlert, diffBetweenInstall] = getDiffDays(strLastDateFeedbackAlert, strDateInstall)
+    return diffBetweenInstall > 7 && diffBetweenFeedbackAlert > 10;
 }
 
-function fireFeedbackSwal(){
+function fireFeedbackSwal() {
     Swal.fire({
-        title: 'Оцените расширение YaMuTools',
+        title: 'Спасибо за использование YaMuTools',
+        html: 'Вы можете <a href="https://browser.google.com/webstore/detail/dgjneghdfaeajjemeklgmbojeeplehah" target="_blank">оставить отзыв</a> или <a href="https://qiwi.com/n/CHIMILDIC" target="_blank">отправить донат</a>, чтобы текущие функции работали стабильно, а новые появлялись чаще',
         input: 'checkbox',
         showCloseButton: true,
-        showCancelButton: true,
+        showConfirmButton: false,
+        showDenyButton: true,
         focusConfirm: true,
         inputPlaceholder: 'Больше не напоминать',
-        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Оставить отзыв',
-        confirmButtonColor: '#3085d6',
-        cancelButtonText: 'Закрыть',
-        cancelButtonColor: '#d33'
+        denyButtonText: 'Закрыть',
+        denyButtonColor: '#d33',
+        returnInputValueOnDeny: true,
     }).then((action) => {
-        if (action.isConfirmed){
-            openWebStorePage();
-        }
-
-        if (action.isConfirmed || action.value == 1){
+        if (action.isConfirmed || action.value == 1) {
             setDontShowFeedbackAlert();
         }
     });
@@ -45,10 +38,22 @@ function openWebStorePage(){
     window.open(`https://addons.mozilla.org/ru/firefox/addon/yamutools/`);
 }
 
-function setLastShownFeedbackAlert(){
-    saveOption('lastShownFeedbackAlert', new Date().getDate());
+function setLastDateFeedbackAlert() {
+    saveOption('strLastDateFeedbackAlert', new Date().toUTCString());
 }
 
-function setDontShowFeedbackAlert(){
+function setDontShowFeedbackAlert() {
     saveOption('showFeedbackAlert', false);
+}
+
+function getDiffDays(strLastDate, strDateInstall) {
+    let today = new Date();
+
+    let lastDate = new Date(strLastDate);
+    let diffBetweenAlert = diffDateByDays(today, lastDate);
+
+    let dateInstall = new Date(strDateInstall);
+    let diffBetweenInstall = diffDateByDays(today, dateInstall);
+
+    return [diffBetweenAlert, diffBetweenInstall]
 }

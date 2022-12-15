@@ -50,7 +50,7 @@ function restoreChecked(items) {
 
 function restoreContext(items) {
     restoreUserTabContext(items.dataUserTab);
-    restoreSectionDonate(items.onDonateSection, items.countCreatedPlaylist);
+    // restoreSectionDonate(items.onDonateSection, items.countCreatedPlaylist);
 }
 
 function restoreLastfmLogin(items){
@@ -123,13 +123,13 @@ function restoreUserTabContext(data) {
     urlUserTab.addEventListener('input', debounce(onInputUserTabContext, 1000));
 }
 
-function restoreSectionDonate(onDonateSection, countCreatedPlaylist) {
-    donateSection.style.display = onDonateSection ? 'flex' : 'none';    
-    checkboxDonateSection.style.display = countCreatedPlaylist > 30 ? 'flex' : 'none';
-    checkboxDonateSection.onchange = () =>{
-        location.reload();
-    };
-}
+// function restoreSectionDonate(onDonateSection, countCreatedPlaylist) {
+//     donateSection.style.display = onDonateSection ? 'flex' : 'none';    
+//     checkboxDonateSection.style.display = countCreatedPlaylist > 30 ? 'flex' : 'none';
+//     checkboxDonateSection.onchange = () =>{
+//         location.reload();
+//     };
+// }
 
 function onInputUserTabContext() {
     saveOption('dataUserTab', {

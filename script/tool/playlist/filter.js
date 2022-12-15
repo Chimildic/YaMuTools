@@ -14,6 +14,10 @@ const FILTER_CONTEXT_MENU = {
         {
             title: 'Управление ремиксами',
             handler: () => onClickFilterTool(onClickControlMixTracks),
+        }, 
+        {
+            title: 'Управление недоступными',
+            handler: () => onClickFilterTool(onClickNoRightsTracks)
         },
         {
             title: 'Удалить недавно игравшие',
@@ -28,9 +32,17 @@ const FILTER_CONTEXT_MENU = {
             handler: () => onClickFilterTool(onClickRemoveRuTracks),
         },
         {
-            title: 'Вычитание треков',
-            handler: () => onClickFilterTool(onClickRemoveFromOtherPlaylists),
+            title: 'Вычитание плейлистов',
+            handler: () => onClickFilterTool(onClickSubTracksByPlaylists),
         },
+        {
+            title: 'Вычитание исполнителей',
+            handler: () => onClickFilterTool(onClickSubTracksByArtists),
+        },
+        {
+            title: 'Случайная выборка',
+            handler: () => onClickFilterTool(onClickRandomSelect)
+        }
     ],
 };
 
@@ -60,7 +72,7 @@ function onClickControlDislikesTracks(playlist) {
             removeFAV: 'Удалить оба типа',
             removeAllExceptLikes: 'Оставить только лайки',
         },
-    }).then((action) => {
+    }).then(async (action) => {
         if (!action.isConfirmed) {
             return;
         }
@@ -73,7 +85,7 @@ function onClickControlDislikesTracks(playlist) {
         } else if (action.value == 'removeFAV') {
             removeFav(ids, callback);
         } else if (action.value == 'removeAllExceptLikes') {
-            removeAllExceptLikes(ids, callback);
+            callback(await removeAllExceptLikes(ids));
         }
     });
 
@@ -163,28 +175,45 @@ async function onClickRemoveHistoryTracks(playlist) {
     });
 }
 
-function onClickRemoveFromOtherPlaylists(sourcePlaylist) {
+function onClickRandomSelect(playlist) {
+    Swal.fire({
+        title: 'Случайная выборка',
+        input: 'text',
+        text: `Количество треков из ${playlist.trackCount} доступных`,
+        inputValue: 40,
+        showCancelButton: true,
+        cancelButtonText: 'Отмена',
+        inputValidator: (value) => {
+            if (!/^[1-9]\d*$/.test(value)) {
+                return 'Некорректное число';
+            }
+        }
+    }).then(result => {
+        if (!result.isConfirmed) {
+            return;
+        }
+        fireHammerSwal()
+        removeDislikeIds(getTrackIds(playlist.tracks), (trackIds) => {
+            shuffle(trackIds)
+            createPlaylistWithRedirect({
+                title: `Случайная выборка из "${playlist.title}"`,
+                description: '',
+                trackIds: trackIds.slice(0, parseInt(result.value))
+            })
+        })
+    })
+}
+
+function onClickSubTracksByPlaylists(sourcePlaylist) {
     receiveAllPlaylists(playlists => {
-        let html = '';
-        playlists.forEach((p) => {
-            html += `<p><input type="checkbox" id="choose-${p.kind}"/> <label for="choose-${p.kind}">${p.title}</label><p/>`;
-        });
+        let html = playlists.reduce((html, p) => (html += `<p><input type="checkbox" id="choose-${p.kind}"/> <label for="choose-${p.kind}">${p.title}</label><p/>`, html), '')
         html = `<div><p>Выберите плейлисты, треки которых нужно удалить из текущего плейлиста "${sourcePlaylist.title}"</p></div></br><div style="display:flex;overflow-y:scroll;height: 200px"><div style="text-align:left;margin:auto;">${html}</div></div>`;
 
         Swal.fire({
             title: 'Вычитание',
             html: html,
             confirmButtonText: 'Продолжить',
-            preConfirm: () => {
-                let elements = Swal.getPopup().querySelectorAll('[id*=choose-]');
-                let values = [];
-                elements.forEach((e) => {
-                    if (e.checked) {
-                        values.push(e.id.split('-')[1]);
-                    }
-                });
-                return values;
-            },
+            preConfirm: preConfirmForSubTracks,
         }).then(async result => {
             if (!result.isConfirmed) {
                 return;
@@ -197,6 +226,45 @@ function onClickRemoveFromOtherPlaylists(sourcePlaylist) {
             updateTracksWithFilter(sourcePlaylist);
         })
     });
+}
+
+function onClickSubTracksByArtists(sourcePlaylist) {
+    let artistGroups = sourcePlaylist.tracks
+        .map(t => t.artists || []).flat()
+        .reduce((artistGroups, artist) => ((artistGroups[artist.id] = artist.name), artistGroups), {})
+    let artists = Object.keys(artistGroups).map(key => ({ name: artistGroups[key], id: key }))
+    artists.sort((x, y) => x.name.localeCompare(y.name))
+
+    let html = artists.reduce((html, a) => (html += `<p><input type="checkbox" id="choose-${a.id}"/> <label for="choose-${a.id}">${a.name}</label><p/>`, html), '')
+    html = `<div><p>Выберите исполнителей, треки которых нужно удалить из текущего плейлиста "${sourcePlaylist.title}"</p></div></br><div style="display:flex;overflow-y:scroll;height: 200px"><div style="text-align:left;margin:auto;">${html}</div></div>`;
+
+    Swal.fire({
+        title: 'Вычитание',
+        html: html,
+        confirmButtonText: 'Продолжить',
+        preConfirm: preConfirmForSubTracks,
+    }).then(async result => {
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        sourcePlaylist.tracks = sourcePlaylist.tracks.filter(t =>
+            !t.artists.find(a => result.value.includes(`${a.id}`))
+        )
+        updateTracksWithFilter(sourcePlaylist)
+    })
+
+}
+
+function preConfirmForSubTracks() {
+    let elements = Swal.getPopup().querySelectorAll('[id*=choose-]');
+    let values = [];
+    elements.forEach((e) => {
+        if (e.checked) {
+            values.push(e.id.split('-')[1]);
+        }
+    });
+    return values;
 }
 
 function updateTracksWithFilter(playlist, ids) {
@@ -240,6 +308,31 @@ function match(items, strRegex, invert = false) {
         }
         return invert ^ (regex.test(item.title.formatName()) || albumCheck || versionCheck);
     });
+}
+
+function onClickNoRightsTracks(sourcePlaylist) {
+    Swal.fire({
+        title: 'Выберите действие',
+        input: 'radio',
+        inputValue: 'remove',
+        inputOptions: {
+            'remove': 'Удалить недоступные треки в текущем плейлисте',
+            'collect': 'Собрать недоступные треки со всех плейлистов (без удаления)',
+        },
+        returnInputValueOnDeny: true
+    }).then(result => {
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        fireCollectorSwal()
+        if (result.value == 'remove') {
+            sourcePlaylist.tracks = sourcePlaylist.tracks.filter(t => !t.error)
+            updateTracksWithFilter(sourcePlaylist)
+        } else if (result.value == 'collect') {
+            collectNoRightsTracks()
+        }
+    })
 }
 
 String.prototype.formatName = function () {

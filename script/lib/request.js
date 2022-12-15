@@ -1,21 +1,26 @@
 function requestGET(url, callback) {
-    requestOfType({
-        type: 'GET',
-        url: url,
-        formData: null,
-        callback: callback,
-    });
+    return new Promise(resolve => {
+        let data = {
+            type: 'GET',
+            url: url,
+            formData: null,
+        }
+        data.callback = callback ? callback : resolve
+        requestOfType(data);
+    })
 }
 
 function requestPOST(url, formData, callback) {
-    refreshSign(() =>
-        requestOfType({
+    return new Promise(resolve => {
+        let data = {
             type: 'POST',
             url: url,
             formData: formData,
             callback: callback,
-        })
-    );
+        }
+        data.callback = callback ? callback : resolve
+        refreshSign(() => requestOfType(data))
+    })
 }
 
 function backgroundGET(url, callback) {
@@ -29,19 +34,16 @@ function backgroundFileGET(url, callback) {
 }
 
 function backgroundRequest(action, url, callback) {
-    browser.runtime.sendMessage({ action: action, url: url }, (response) => callback(response));
+    chrome.runtime.sendMessage({ action: action, url: url }, (response) => callback(response));
 }
 
-function requestFileGET(url, callback) {
-    let request = new XMLHttpRequest();
-    request.responseType = 'blob';
-    request.onreadystatechange = function () {
-        if (request.readyState == 4) {
-            callback(request.response);
-        }
-    };
-    request.open('GET', url);
-    request.send();
+async function requestFileGET(url, callback) {
+    try {
+        let r = await fetch(url);
+        r.blob().then(content => callback(content));
+    } catch (e) {
+        callback()
+    }
 }
 
 function requestFilePOST(url, formData, callback) {

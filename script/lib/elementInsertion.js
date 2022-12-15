@@ -6,6 +6,7 @@ const PARENT_CLASS = {
     '.d-generic-page-head__main-side-actions': 'afterbegin',
     '.page-playlist__controls': 'beforeend',
     '.d-generic-page-head__main-actions': 'beforeend',
+    '.page-label__controls': 'beforeend'
 };
 let navTabs, indexNavTabs;
 
@@ -125,5 +126,49 @@ function updateIndexOfNavTabs() {
     for (i = 0; i < navTabs.length; i++) {
         let name = navTabs[i].getAttribute('data-name');
         indexNavTabs[name] = i;
+    }
+}
+
+async function addTrackCount() {
+    const TRACK_COUNT_ID = 'yamutools_track_count'
+    let element = document.querySelector('.page-playlist__info-wrapper')
+    if (!element) {
+        return
+    }
+
+    let span = document.querySelector(`#${TRACK_COUNT_ID}`)
+    if (!span) {
+        span = document.createElement('span')
+        span.id = TRACK_COUNT_ID
+        element.insertAdjacentElement('beforeend', span)
+    }
+
+    let tracks = await getTracks()
+    let noRightsCount = tracks.filter(t => t.error).length
+    span.innerText = `. Треков: ${tracks.length}${noRightsCount > 0 ? `, недоступно: ${noRightsCount}.` : '.'}`
+
+    function getTracks() {
+        return new Promise(async resolve => {
+            let tracks = []
+            let args = getArgsByLocation()
+            if (args.kind == 3) {
+                // tracks = await new Promise(resolve => backgroundGET(`https://api.music.yandex.net/users/${args.owner}/playlists/3`, (r) => {
+                //     resolve(r.result.tracks)
+                // }))
+
+                let trackIds = await receiveAllTrackIdsOfLibrary(args.owner)
+                let likeIds = await removeAllExceptLikes(trackIds.map(id => { return { id: id } }))
+                tracks = await receiveTrackEntries(likeIds.map(t => t.id))
+
+                patchPlaylistWithRedirect({
+                    title: "лайки?",
+                    description: "",
+                    trackIds: likeIds,
+                });
+            } else {
+                tracks = (await receivePlaylistByKind(args.kind)).tracks
+            }
+            resolve(tracks)
+        })
     }
 }
